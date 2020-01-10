@@ -19,6 +19,7 @@ func loadGIF(path string) (*gif.GIF, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 	return gif.DecodeAll(f)
 }
 
