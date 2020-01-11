@@ -24,6 +24,10 @@ func (g *GIFImage) Get(i int) *canvas.Image {
 	return g.images[i]
 }
 
+func (g *GIFImage) GetOrigin(i int) image.Image {
+	return g.origin.Image[i]
+}
+
 func (g *GIFImage) Length() int {
 	return len(g.images)
 }

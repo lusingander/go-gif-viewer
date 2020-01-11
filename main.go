@@ -6,6 +6,7 @@ import (
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
+	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 	"github.com/lusingander/go-gif-viewer/image"
@@ -25,9 +26,14 @@ func run(args []string) error {
 	if err != nil {
 		return err
 	}
-	viewArea := widget.NewScrollContainer(img.Get(0))
+	imgArea := &canvas.Image{Image: img.GetOrigin(0)}
+	viewArea := widget.NewScrollContainer(imgArea)
 	viewArea.Resize(defaultWindowSize)
 	navigateBar := newNavigateBar(img.Length())
+	navigateBar.addObserver(func(n int) {
+		imgArea.Image = img.GetOrigin(n)
+		canvas.Refresh(imgArea)
+	})
 	panel := fyne.NewContainerWithLayout(layout.NewBorderLayout(
 		navigateBar.bar, nil, nil, nil), navigateBar.bar, viewArea)
 	w.SetContent(panel)

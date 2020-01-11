@@ -17,6 +17,12 @@ type navigateBar struct {
 
 	current, total int
 	totalDigit     int
+
+	observers []func(int)
+}
+
+func (b *navigateBar) addObserver(f func(int)) {
+	b.observers = append(b.observers, f)
 }
 
 func (b *navigateBar) next() {
@@ -45,6 +51,9 @@ func (b *navigateBar) update() {
 	// Note: Slider doesn't have proper method...
 	b.countSlider.Value = float64(b.current - 1)
 	b.countSlider.Refresh()
+	for _, o := range b.observers {
+		o(b.current)
+	}
 }
 
 func (b *navigateBar) createCountText() string {
@@ -55,8 +64,9 @@ func (b *navigateBar) createCountText() string {
 
 func newNavigateBar(n int) *navigateBar {
 	bar := &navigateBar{
-		current: 1,
-		total:   n,
+		current:   1,
+		total:     n,
+		observers: make([]func(int), 0),
 	}
 	prev := widget.NewButtonWithIcon("", theme.NavigateBackIcon(), bar.prev)
 	next := widget.NewButtonWithIcon("", theme.NavigateNextIcon(), bar.next)
