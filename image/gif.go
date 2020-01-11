@@ -24,6 +24,10 @@ func (g *GIFImage) Get(i int) *canvas.Image {
 	return g.images[i]
 }
 
+func (g *GIFImage) Length() int {
+	return len(g.images)
+}
+
 func LoadGIFImageFromPath(path string) (*GIFImage, error) {
 	g, err := loadGIF(path)
 	if err != nil {
