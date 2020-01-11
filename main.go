@@ -1,55 +1,30 @@
 package main
 
 import (
-	"bytes"
-	"image/gif"
 	"log"
 	"os"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
-	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/widget"
+	"github.com/lusingander/go-gif-viewer/image"
 )
 
-const filePath = "./sample.gif"
-
-func loadGIF(path string) (*gif.GIF, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	return gif.DecodeAll(f)
-}
-
-func loadGIFImageFromPath(path string) (*canvas.Image, error) {
-	g, err := loadGIF(path)
-	if err != nil {
-		return nil, err
-	}
-	_ = g
-	buf := new(bytes.Buffer)
-	err = gif.Encode(buf, g.Image[0], nil)
-	if err != nil {
-		return nil, err
-	}
-	res := fyne.NewStaticResource("res", buf.Bytes())
-	return canvas.NewImageFromResource(res), nil
-}
+const (
+	appName = "GIF Viewer"
+)
 
 var defaultWindowSize = fyne.NewSize(400, 400)
 
 func run(args []string) error {
 	a := app.New()
-	w := a.NewWindow("GIF Viewer")
+	w := a.NewWindow(appName)
 	w.Resize(defaultWindowSize)
-	img, err := loadGIFImageFromPath(args[1])
+	img, err := image.LoadGIFImageFromPath(args[1])
 	if err != nil {
 		return err
 	}
-	img.SetMinSize(fyne.NewSize(600, 600))
-	scroll := widget.NewScrollContainer(img)
+	scroll := widget.NewScrollContainer(img.Get(0))
 	scroll.Resize(defaultWindowSize)
 	w.SetContent(scroll)
 	w.ShowAndRun()
