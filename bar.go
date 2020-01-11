@@ -52,7 +52,7 @@ func (b *navigateBar) update() {
 	b.countSlider.Value = float64(b.current - 1)
 	b.countSlider.Refresh()
 	for _, o := range b.observers {
-		o(b.current)
+		o(b.current - 1)
 	}
 }
 
