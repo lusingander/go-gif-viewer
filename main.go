@@ -26,7 +26,7 @@ func run(args []string) error {
 	if err != nil {
 		return err
 	}
-	imgArea := &canvas.Image{Image: img.GetOrigin(0)}
+	imgArea := &canvas.Image{Image: img.GetOrigin(0), FillMode: canvas.ImageFillContain}
 	viewArea := widget.NewScrollContainer(imgArea)
 	viewArea.Resize(defaultWindowSize)
 	navigateBar := newNavigateBar(img.Length())
