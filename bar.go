@@ -58,15 +58,33 @@ func (b *navigateBar) stop() {
 }
 
 func (b *navigateBar) next() {
-	if b.current < b.total {
+	if b.current == b.total {
+		b.first()
+	} else if b.current < b.total {
 		b.current++
 		b.update()
 	}
 }
 
 func (b *navigateBar) prev() {
-	if b.current > 1 {
+	if b.current == 1 {
+		b.last()
+	} else if b.current > 1 {
 		b.current--
+		b.update()
+	}
+}
+
+func (b *navigateBar) first() {
+	if b.current > 1 {
+		b.current = 1
+		b.update()
+	}
+}
+
+func (b *navigateBar) last() {
+	if b.current < b.total {
+		b.current = b.total
 		b.update()
 	}
 }
