@@ -32,6 +32,14 @@ func (g *GIFImage) Length() int {
 	return len(g.images)
 }
 
+func (g *GIFImage) DelayMilliSec() []int {
+	delay := make([]int, g.Length())
+	for i, d := range g.origin.Delay {
+		delay[i] = d * 10
+	}
+	return delay
+}
+
 func LoadGIFImageFromPath(path string) (*GIFImage, error) {
 	g, err := loadGIF(path)
 	if err != nil {

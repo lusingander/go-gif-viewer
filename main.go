@@ -29,7 +29,7 @@ func run(args []string) error {
 	imgArea := &canvas.Image{Image: img.GetOrigin(0), FillMode: canvas.ImageFillContain}
 	viewArea := widget.NewScrollContainer(imgArea)
 	viewArea.Resize(defaultWindowSize)
-	navigateBar := newNavigateBar(img.Length())
+	navigateBar := newNavigateBar(img)
 	navigateBar.addObserver(func(n int) {
 		imgArea.Image = img.GetOrigin(n)
 		canvas.Refresh(imgArea)

@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
+	"github.com/lusingander/go-gif-viewer/image"
 )
 
 type navigateBar struct {
@@ -19,10 +21,40 @@ type navigateBar struct {
 	totalDigit     int
 
 	observers []func(int)
+
+	// TODO: fix
+	delayMilliSec int
+	stopPlay      chan bool
 }
 
 func (b *navigateBar) addObserver(f func(int)) {
 	b.observers = append(b.observers, f)
+}
+
+func (b *navigateBar) start() {
+	if b.stopPlay != nil {
+		return
+	}
+	b.stopPlay = make(chan bool)
+	go func() {
+		t := time.NewTicker(time.Duration(b.delayMilliSec) * time.Millisecond)
+		for {
+			select {
+			case <-t.C:
+				b.next()
+			case <-b.stopPlay:
+				t.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func (b *navigateBar) stop() {
+	if b.stopPlay != nil {
+		b.stopPlay <- true
+		b.stopPlay = nil
+	}
 }
 
 func (b *navigateBar) next() {
@@ -62,12 +94,17 @@ func (b *navigateBar) createCountText() string {
 		b.totalDigit, b.current, b.totalDigit, b.total)
 }
 
-func newNavigateBar(n int) *navigateBar {
+func newNavigateBar(img *image.GIFImage) *navigateBar {
+	n := img.Length()
 	bar := &navigateBar{
-		current:   1,
-		total:     n,
-		observers: make([]func(int), 0),
+		current:       1,
+		total:         n,
+		observers:     make([]func(int), 0),
+		delayMilliSec: img.DelayMilliSec()[0], // TODO: fix
 	}
+	// TODO: use button with icon
+	start := widget.NewButton("Start", bar.start)
+	stop := widget.NewButton("Stop", bar.stop)
 	prev := widget.NewButtonWithIcon("", theme.NavigateBackIcon(), bar.prev)
 	next := widget.NewButtonWithIcon("", theme.NavigateNextIcon(), bar.next)
 	slider := widget.NewSlider(0, float64(n-1))
@@ -76,7 +113,7 @@ func newNavigateBar(n int) *navigateBar {
 	bar.totalDigit = len(strconv.Itoa(n))
 	count := widget.NewLabel(bar.createCountText())
 	bar.countLabel = count
-	buttons := widget.NewHBox(prev, next)
+	buttons := widget.NewHBox(start, stop, prev, next)
 	bar.bar = fyne.NewContainerWithLayout(layout.NewBorderLayout(
 		nil, nil, buttons, count), buttons, count, slider)
 	return bar
