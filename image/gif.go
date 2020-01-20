@@ -46,12 +46,12 @@ func newGIFImage(g *gif.GIF) (*GIFImage, error) {
 	images := make([]image.Image, len(g.Image))
 	images[0] = g.Image[0]
 	for i := 1; i < len(g.Image); i++ {
-		base := g.Image[i]
+		p := g.Image[i]
 		img := image.NewRGBA(rect)
 		for x := 0; x < rect.Dx(); x++ {
 			for y := 0; y < rect.Dy(); y++ {
-				if base.Rect.Min.X <= x && x < base.Rect.Max.X && base.Rect.Min.Y <= y && y < base.Rect.Max.Y {
-					img.Set(x, y, base.At(x, y))
+				if isInRect(x, y, p.Rect) {
+					img.Set(x, y, p.At(x, y))
 				} else {
 					img.Set(x, y, images[i-1].At(x, y))
 				}
@@ -60,6 +60,11 @@ func newGIFImage(g *gif.GIF) (*GIFImage, error) {
 		images[i] = img
 	}
 	return &GIFImage{g, images}, nil
+}
+
+func isInRect(x, y int, r image.Rectangle) bool {
+	return r.Min.X <= x && x < r.Max.X &&
+		r.Min.Y <= y && y < r.Max.Y
 }
 
 func loadGIF(path string) (*gif.GIF, error) {
