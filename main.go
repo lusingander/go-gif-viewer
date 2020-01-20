@@ -26,12 +26,12 @@ func run(args []string) error {
 	if err != nil {
 		return err
 	}
-	imgArea := &canvas.Image{Image: img.GetOrigin(0), FillMode: canvas.ImageFillContain}
+	imgArea := &canvas.Image{Image: img.Get(0), FillMode: canvas.ImageFillContain}
 	viewArea := widget.NewScrollContainer(imgArea)
 	viewArea.Resize(defaultWindowSize)
 	navigateBar := newNavigateBar(img)
 	navigateBar.addObserver(func(n int) {
-		imgArea.Image = img.GetOrigin(n)
+		imgArea.Image = img.Get(n)
 		canvas.Refresh(imgArea)
 	})
 	panel := fyne.NewContainerWithLayout(layout.NewBorderLayout(

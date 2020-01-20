@@ -1,31 +1,24 @@
 package image
 
 import (
-	"bytes"
-	"fmt"
 	"image"
 	"image/gif"
 	"os"
 
 	"fyne.io/fyne"
-	"fyne.io/fyne/canvas"
 )
 
 type GIFImage struct {
 	origin *gif.GIF
-	images []*canvas.Image
+	images []image.Image
 }
 
 func (g *GIFImage) Size() fyne.Size {
 	return getImageSize(g.origin)
 }
 
-func (g *GIFImage) Get(i int) *canvas.Image {
+func (g *GIFImage) Get(i int) image.Image {
 	return g.images[i]
-}
-
-func (g *GIFImage) GetOrigin(i int) image.Image {
-	return g.origin.Image[i]
 }
 
 func (g *GIFImage) Length() int {
@@ -49,26 +42,24 @@ func LoadGIFImageFromPath(path string) (*GIFImage, error) {
 }
 
 func newGIFImage(g *gif.GIF) (*GIFImage, error) {
-	size := getImageSize(g)
-	images := make([]*canvas.Image, 0, len(g.Image))
-	for i, base := range g.Image {
-		image, err := newImage(base, fmt.Sprintf("res_%d", i))
-		if err != nil {
-			return nil, err
+	rect := g.Image[0].Rect
+	images := make([]image.Image, len(g.Image))
+	images[0] = g.Image[0]
+	for i := 1; i < len(g.Image); i++ {
+		base := g.Image[i]
+		img := image.NewRGBA(rect)
+		for x := 0; x < rect.Dx(); x++ {
+			for y := 0; y < rect.Dy(); y++ {
+				if base.Rect.Min.X <= x && x < base.Rect.Max.X && base.Rect.Min.Y <= y && y < base.Rect.Max.Y {
+					img.Set(x, y, base.At(x, y))
+				} else {
+					img.Set(x, y, images[i-1].At(x, y))
+				}
+			}
 		}
-		image.SetMinSize(size)
-		images = append(images, image)
+		images[i] = img
 	}
 	return &GIFImage{g, images}, nil
-}
-
-func newImage(src image.Image, name string) (*canvas.Image, error) {
-	buf := new(bytes.Buffer)
-	if err := gif.Encode(buf, src, nil); err != nil {
-		return nil, err
-	}
-	res := fyne.NewStaticResource(name, buf.Bytes())
-	return canvas.NewImageFromResource(res), nil
 }
 
 func loadGIF(path string) (*gif.GIF, error) {
