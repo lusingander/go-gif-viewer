@@ -2,6 +2,7 @@ package image
 
 import (
 	"image"
+	"image/color"
 	"image/gif"
 	"os"
 
@@ -50,7 +51,7 @@ func newGIFImage(g *gif.GIF) (*GIFImage, error) {
 		img := image.NewRGBA(rect)
 		for x := 0; x < rect.Dx(); x++ {
 			for y := 0; y < rect.Dy(); y++ {
-				if isInRect(x, y, p.Rect) {
+				if isInRect(x, y, p.Rect) && !isFullyTransparent(p.At(x, y)) {
 					img.Set(x, y, p.At(x, y))
 				} else {
 					img.Set(x, y, images[i-1].At(x, y))
@@ -60,6 +61,11 @@ func newGIFImage(g *gif.GIF) (*GIFImage, error) {
 		images[i] = img
 	}
 	return &GIFImage{g, images}, nil
+}
+
+func isFullyTransparent(c color.Color) bool {
+	_, _, _, a := c.RGBA()
+	return a == 0
 }
 
 func isInRect(x, y int, r image.Rectangle) bool {
