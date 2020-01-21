@@ -51,7 +51,7 @@ func newGIFImage(g *gif.GIF) (*GIFImage, error) {
 		img := image.NewRGBA(rect)
 		for x := 0; x < rect.Dx(); x++ {
 			for y := 0; y < rect.Dy(); y++ {
-				if isInRect(x, y, p.Rect) && !isFullyTransparent(p.At(x, y)) {
+				if isInRect(x, y, p.Rect) && isOpaque(p.At(x, y)) {
 					img.Set(x, y, p.At(x, y))
 				} else {
 					img.Set(x, y, images[i-1].At(x, y))
@@ -61,16 +61,6 @@ func newGIFImage(g *gif.GIF) (*GIFImage, error) {
 		images[i] = img
 	}
 	return &GIFImage{g, images}, nil
-}
-
-func isFullyTransparent(c color.Color) bool {
-	_, _, _, a := c.RGBA()
-	return a == 0
-}
-
-func isInRect(x, y int, r image.Rectangle) bool {
-	return r.Min.X <= x && x < r.Max.X &&
-		r.Min.Y <= y && y < r.Max.Y
 }
 
 func loadGIF(path string) (*gif.GIF, error) {
@@ -85,4 +75,14 @@ func loadGIF(path string) (*gif.GIF, error) {
 func getImageSize(g *gif.GIF) fyne.Size {
 	s := g.Image[0].Rect.Size()
 	return fyne.NewSize(s.X, s.Y)
+}
+
+func isOpaque(c color.Color) bool {
+	_, _, _, a := c.RGBA()
+	return a > 0
+}
+
+func isInRect(x, y int, r image.Rectangle) bool {
+	return r.Min.X <= x && x < r.Max.X &&
+		r.Min.Y <= y && y < r.Max.Y
 }
