@@ -47,20 +47,23 @@ func newGIFImage(g *gif.GIF) (*GIFImage, error) {
 	images := make([]image.Image, len(g.Image))
 	images[0] = g.Image[0]
 	for i := 1; i < len(g.Image); i++ {
-		p := g.Image[i]
-		img := image.NewRGBA(rect)
-		for x := 0; x < rect.Dx(); x++ {
-			for y := 0; y < rect.Dy(); y++ {
-				if isInRect(x, y, p.Rect) && isOpaque(p.At(x, y)) {
-					img.Set(x, y, p.At(x, y))
-				} else {
-					img.Set(x, y, images[i-1].At(x, y))
-				}
-			}
-		}
-		images[i] = img
+		images[i] = restoreFrame(g.Image[i], images[i-1], rect)
 	}
 	return &GIFImage{g, images}, nil
+}
+
+func restoreFrame(current *image.Paletted, prev image.Image, rect image.Rectangle) image.Image {
+	img := image.NewRGBA(rect)
+	for x := 0; x < rect.Dx(); x++ {
+		for y := 0; y < rect.Dy(); y++ {
+			if isInRect(x, y, current.Rect) && isOpaque(current.At(x, y)) {
+				img.Set(x, y, current.At(x, y))
+			} else {
+				img.Set(x, y, prev.At(x, y))
+			}
+		}
+	}
+	return img
 }
 
 func loadGIF(path string) (*gif.GIF, error) {
