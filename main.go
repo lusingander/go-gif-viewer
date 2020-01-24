@@ -35,7 +35,7 @@ func run(args []string) error {
 		canvas.Refresh(imgArea)
 	})
 	panel := fyne.NewContainerWithLayout(layout.NewBorderLayout(
-		navigateBar.bar, nil, nil, nil), navigateBar.bar, viewArea)
+		navigateBar.CanvasObject, nil, nil, nil), navigateBar.CanvasObject, viewArea)
 	w.SetContent(panel)
 	w.ShowAndRun()
 	return nil

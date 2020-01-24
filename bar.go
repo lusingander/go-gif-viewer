@@ -13,7 +13,8 @@ import (
 )
 
 type navigateBar struct {
-	bar         fyne.CanvasObject
+	fyne.CanvasObject
+
 	countLabel  *widget.Label
 	countSlider *widget.Slider
 
@@ -132,7 +133,7 @@ func newNavigateBar(img *image.GIFImage) *navigateBar {
 	count := widget.NewLabel(bar.createCountText())
 	bar.countLabel = count
 	buttons := widget.NewHBox(start, stop, prev, next)
-	bar.bar = fyne.NewContainerWithLayout(layout.NewBorderLayout(
+	bar.CanvasObject = fyne.NewContainerWithLayout(layout.NewBorderLayout(
 		nil, nil, buttons, count), buttons, count, slider)
 	return bar
 }
