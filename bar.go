@@ -23,6 +23,8 @@ type navigateBar struct {
 
 	observers []func(int)
 
+	canPlay bool
+
 	// TODO: fix
 	delayMilliSec int
 	stopPlay      chan bool
@@ -33,7 +35,7 @@ func (b *navigateBar) addObserver(f func(int)) {
 }
 
 func (b *navigateBar) start() {
-	if b.stopPlay != nil {
+	if b.stopPlay != nil || !b.canPlay {
 		return
 	}
 	b.stopPlay = make(chan bool)
@@ -59,6 +61,9 @@ func (b *navigateBar) stop() {
 }
 
 func (b *navigateBar) next() {
+	if !b.canPlay {
+		return
+	}
 	if b.current == b.total {
 		b.first()
 	} else if b.current < b.total {
@@ -68,6 +73,9 @@ func (b *navigateBar) next() {
 }
 
 func (b *navigateBar) prev() {
+	if !b.canPlay {
+		return
+	}
 	if b.current == 1 {
 		b.last()
 	} else if b.current > 1 {
@@ -77,6 +85,9 @@ func (b *navigateBar) prev() {
 }
 
 func (b *navigateBar) first() {
+	if !b.canPlay {
+		return
+	}
 	if b.current > 1 {
 		b.current = 1
 		b.update()
@@ -84,6 +95,9 @@ func (b *navigateBar) first() {
 }
 
 func (b *navigateBar) last() {
+	if !b.canPlay {
+		return
+	}
 	if b.current < b.total {
 		b.current = b.total
 		b.update()
@@ -91,6 +105,9 @@ func (b *navigateBar) last() {
 }
 
 func (b *navigateBar) change(n int) {
+	if !b.canPlay {
+		return
+	}
 	if 1 <= n && n <= b.total {
 		b.current = n
 		b.update()
@@ -108,28 +125,38 @@ func (b *navigateBar) update() {
 }
 
 func (b *navigateBar) createCountText() string {
+	if !b.canPlay {
+		return ""
+	}
 	// 桁数によって伸び縮みしておりスライダーも伸び縮みしてしまう？
 	return fmt.Sprintf("%*d/%*d",
 		b.totalDigit, b.current, b.totalDigit, b.total)
 }
 
-func newNavigateBar(img *image.GIFImage) *navigateBar {
+func (b *navigateBar) setImage(img *image.GIFImage) {
 	n := img.Length()
+	b.current = 1
+	b.total = n
+	b.countSlider.Max = float64(n - 1)
+	b.totalDigit = len(strconv.Itoa(n))
+	b.delayMilliSec = img.DelayMilliSec()[0] // TODO: fix
+	b.canPlay = true
+	b.update()
+}
+
+func newNavigateBar() *navigateBar {
 	bar := &navigateBar{
-		current:       1,
-		total:         n,
-		observers:     make([]func(int), 0),
-		delayMilliSec: img.DelayMilliSec()[0], // TODO: fix
+		observers: make([]func(int), 0),
+		canPlay:   false,
 	}
 	// TODO: use button with icon
 	start := widget.NewButton("Start", bar.start)
 	stop := widget.NewButton("Stop", bar.stop)
 	prev := widget.NewButtonWithIcon("", theme.NavigateBackIcon(), bar.prev)
 	next := widget.NewButtonWithIcon("", theme.NavigateNextIcon(), bar.next)
-	slider := widget.NewSlider(0, float64(n-1))
+	slider := widget.NewSlider(0, 1)
 	slider.OnChanged = func(f float64) { bar.change(int(f) + 1) }
 	bar.countSlider = slider
-	bar.totalDigit = len(strconv.Itoa(n))
 	count := widget.NewLabel(bar.createCountText())
 	bar.countLabel = count
 	buttons := widget.NewHBox(start, stop, prev, next)
