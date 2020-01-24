@@ -6,7 +6,6 @@ import (
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
-	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/layout"
 	"github.com/lusingander/go-gif-viewer/image"
 )
@@ -21,10 +20,7 @@ func loadImage(img *image.GIFImage, v *imageView, b *navigateBar) {
 	v.setImage(img)
 	b.setImage(img)
 	// TODO: remove old observer
-	b.addObserver(func(n int) {
-		v.Image.Image = img.Get(n)
-		canvas.Refresh(v.Image)
-	})
+	b.addObserver(func(n int) { v.refleshFrame(n) })
 }
 
 func run(args []string) error {

@@ -10,6 +10,8 @@ import (
 type imageView struct {
 	*canvas.Image
 	fyne.CanvasObject
+
+	*image.GIFImage
 }
 
 func newImageView() *imageView {
@@ -25,5 +27,11 @@ func newImageView() *imageView {
 }
 
 func (v *imageView) setImage(img *image.GIFImage) {
-	v.Image.Image = img.Get(0)
+	v.GIFImage = img
+	v.Image.Image = v.GIFImage.Get(0)
+}
+
+func (v *imageView) refleshFrame(n int) {
+	v.Image.Image = v.GIFImage.Get(n)
+	canvas.Refresh(v.Image)
 }
