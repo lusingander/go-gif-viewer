@@ -20,7 +20,7 @@ func loadImage(img *image.GIFImage, v *imageView, b *navigateBar) {
 	v.setImage(img)
 	b.setImage(img)
 	// TODO: remove old observer
-	b.addObserver(func(n int) { v.refleshFrame(n) })
+	b.addObserver(v.refleshFrame)
 }
 
 func run(args []string) error {
