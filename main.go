@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/layout"
+	"fyne.io/fyne/theme"
 	"github.com/lusingander/go-gif-viewer/image"
 	"github.com/sqweek/dialog"
 )
@@ -25,6 +26,7 @@ func loadImage(img *image.GIFImage, v *imageView, b *navigateBar) {
 
 func run(args []string) error {
 	a := app.New()
+	a.Settings().SetTheme(theme.DarkTheme())
 	w := a.NewWindow(appName)
 	w.Resize(defaultWindowSize)
 	imageView := newImageView()
