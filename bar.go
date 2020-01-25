@@ -154,9 +154,8 @@ func newNavigateBar() *navigateBar {
 		observers: make([]func(int), 0),
 		canPlay:   false,
 	}
-	// TODO: use button with icon
-	start := widget.NewButton("Start", bar.start)
-	stop := widget.NewButton("Stop", bar.stop)
+	start := widget.NewButtonWithIcon("", theme.NewThemedResource(resourcePlaySvg, nil), bar.start)
+	stop := widget.NewButtonWithIcon("", theme.NewThemedResource(resourcePauseSvg, nil), bar.stop)
 	prev := widget.NewButtonWithIcon("", theme.NavigateBackIcon(), bar.prev)
 	next := widget.NewButtonWithIcon("", theme.NavigateNextIcon(), bar.next)
 	slider := widget.NewSlider(0, 1)
