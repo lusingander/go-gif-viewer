@@ -28,7 +28,7 @@ func newImageView() *imageView {
 
 func (v *imageView) setImage(img *image.GIFImage) {
 	v.GIFImage = img
-	v.Image.Image = v.GIFImage.Get(0)
+	v.refleshFrame(0)
 }
 
 func (v *imageView) refleshFrame(n int) {
