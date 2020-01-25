@@ -20,7 +20,6 @@ var defaultWindowSize = fyne.NewSize(400, 400)
 func loadImage(img *image.GIFImage, v *imageView, b *navigateBar) {
 	v.setImage(img)
 	b.setImage(img)
-	// TODO: remove old observer
 	b.addObserver(v.refleshFrame)
 }
 

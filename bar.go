@@ -34,6 +34,10 @@ func (b *navigateBar) addObserver(f func(int)) {
 	b.observers = append(b.observers, f)
 }
 
+func (b *navigateBar) clearObservers() {
+	b.observers = make([]func(int), 0)
+}
+
 func (b *navigateBar) start() {
 	if b.stopPlay != nil || !b.canPlay {
 		return
@@ -134,6 +138,7 @@ func (b *navigateBar) createCountText() string {
 }
 
 func (b *navigateBar) setImage(img *image.GIFImage) {
+	b.clearObservers()
 	n := img.Length()
 	b.current = 1
 	b.total = n
