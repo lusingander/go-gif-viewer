@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/layout"
 	"github.com/lusingander/go-gif-viewer/image"
+	"github.com/sqweek/dialog"
 )
 
 const (
@@ -21,6 +22,7 @@ func loadImage(img *image.GIFImage, v *imageView, b *navigateBar) {
 	b.setImage(img)
 	// TODO: remove old observer
 	b.addObserver(v.refleshFrame)
+	v.reflesh()
 }
 
 func run(args []string) error {
@@ -31,12 +33,31 @@ func run(args []string) error {
 	navigateBar := newNavigateBar()
 	panel := fyne.NewContainerWithLayout(layout.NewBorderLayout(
 		navigateBar.CanvasObject, nil, nil, nil), navigateBar.CanvasObject, imageView.CanvasObject)
-	img, err := image.LoadGIFImageFromPath(args[1])
-	if err != nil {
-		return err
-	}
-	loadImage(img, imageView, navigateBar)
 	w.SetContent(panel)
+	w.SetMainMenu(fyne.NewMainMenu(
+		fyne.NewMenu("File",
+			fyne.NewMenuItem("Open", func() {
+				// TODO: refactoring
+				f, err := dialog.File().Filter("GIF", "gif").Load()
+				if err != nil {
+					return
+				}
+				img, err := image.LoadGIFImageFromPath(f)
+				if err != nil {
+					return
+				}
+				loadImage(img, imageView, navigateBar)
+			}),
+		),
+	))
+	if len(args) > 1 {
+		// TODO: refactoring
+		img, err := image.LoadGIFImageFromPath(args[1])
+		if err != nil {
+			return err
+		}
+		loadImage(img, imageView, navigateBar)
+	}
 	w.ShowAndRun()
 	return nil
 }

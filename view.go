@@ -33,5 +33,9 @@ func (v *imageView) setImage(img *image.GIFImage) {
 
 func (v *imageView) refleshFrame(n int) {
 	v.Image.Image = v.GIFImage.Get(n)
+	v.reflesh()
+}
+
+func (v *imageView) reflesh() {
 	canvas.Refresh(v.Image)
 }
