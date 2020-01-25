@@ -36,6 +36,7 @@ func run(args []string) error {
 		fyne.NewMenu("File",
 			fyne.NewMenuItem("Open", func() {
 				// TODO: refactoring
+				// TODO: https://github.com/sqweek/dialog/issues/24
 				f, err := dialog.File().Filter("GIF", "gif").Load()
 				if err != nil {
 					return
