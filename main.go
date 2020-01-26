@@ -32,7 +32,7 @@ func run(args []string) error {
 	imageView := newImageView()
 	navigateBar := newNavigateBar()
 	panel := fyne.NewContainerWithLayout(layout.NewBorderLayout(
-		navigateBar.CanvasObject, nil, nil, nil), navigateBar.CanvasObject, imageView.CanvasObject)
+		nil, navigateBar.CanvasObject, nil, nil), navigateBar.CanvasObject, imageView.CanvasObject)
 	w.SetContent(panel)
 	w.SetMainMenu(fyne.NewMainMenu(
 		fyne.NewMenu("File",

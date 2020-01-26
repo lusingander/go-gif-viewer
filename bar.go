@@ -194,22 +194,29 @@ func newNavigateBar() *navigateBar {
 		observers: make([]func(int), 0),
 		canPlay:   false,
 	}
-	slider := widget.NewSlider(0, 1)
-	slider.OnChanged = func(f float64) { bar.change(int(f) + 1) }
-	bar.countSlider = slider
-	count := widget.NewLabel(bar.createCountText())
-	bar.countLabel = count
+	slider := createSliderBar(bar)
 	buttons := createButtons(bar)
-	bar.CanvasObject = fyne.NewContainerWithLayout(layout.NewBorderLayout(
-		nil, nil, buttons, count), buttons, count, slider)
+	bar.CanvasObject = widget.NewVBox(slider, buttons)
 	return bar
 }
 
-func createButtons(bar *navigateBar) *widget.Box {
+func createSliderBar(bar *navigateBar) fyne.CanvasObject {
+	bar.countSlider = widget.NewSlider(0, 1)
+	bar.countSlider.OnChanged = func(f float64) { bar.change(int(f) + 1) }
+	bar.countLabel = widget.NewLabel(bar.createCountText())
+	return fyne.NewContainerWithLayout(
+		layout.NewBorderLayout(nil, nil, nil, bar.countLabel),
+		bar.countLabel, bar.countSlider,
+	)
+}
+
+func createButtons(bar *navigateBar) fyne.CanvasObject {
 	bar.playButton = newPlayButton(bar.start, bar.stop)
 	first := widget.NewButtonWithIcon("", firstIcon, bar.first)
 	prev := widget.NewButtonWithIcon("", prevIcon, bar.prev)
 	next := widget.NewButtonWithIcon("", nextIcon, bar.next)
 	last := widget.NewButtonWithIcon("", lastIcon, bar.last)
-	return widget.NewHBox(first, prev, bar.playButton.Button, next, last)
+	return widget.NewHBox(
+		layout.NewSpacer(), first, prev, bar.playButton.Button, next, last, layout.NewSpacer(),
+	)
 }
