@@ -31,6 +31,11 @@ func (v *imageView) setImage(img *image.GIFImage) {
 	v.refleshFrame(0)
 }
 
+func (v *imageView) clearImage() {
+	v.Image.Image = nil
+	v.reflesh()
+}
+
 func (v *imageView) refleshFrame(n int) {
 	v.Image.Image = v.GIFImage.Get(n)
 	v.reflesh()

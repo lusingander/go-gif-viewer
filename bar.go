@@ -174,6 +174,15 @@ func (b *navigateBar) setImage(img *image.GIFImage) {
 	b.update()
 }
 
+func (b *navigateBar) clearImage() {
+	b.clearObservers()
+	b.current = 1
+	b.Slider.Max = 1
+	b.canPlay = false
+	b.player = nil
+	b.update()
+}
+
 func newNavigateBar() *navigateBar {
 	bar := &navigateBar{
 		observers: make([]func(int), 0),

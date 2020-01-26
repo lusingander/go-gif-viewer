@@ -24,6 +24,11 @@ func loadImage(img *image.GIFImage, v *imageView, b *navigateBar) {
 	b.addObserver(v.refleshFrame)
 }
 
+func clearImage(v *imageView, b *navigateBar) {
+	v.clearImage()
+	b.clearImage()
+}
+
 func run(args []string) error {
 	a := app.New()
 	a.Settings().SetTheme(theme.DarkTheme())
@@ -48,6 +53,9 @@ func run(args []string) error {
 					return
 				}
 				loadImage(img, imageView, navigateBar)
+			}),
+			fyne.NewMenuItem("Close", func() {
+				clearImage(imageView, navigateBar)
 			}),
 		),
 	))
