@@ -15,6 +15,11 @@ import (
 var (
 	playIcon  fyne.Resource = theme.NewThemedResource(resourcePlaySvg, nil)
 	pauseIcon fyne.Resource = theme.NewThemedResource(resourcePauseSvg, nil)
+
+	prevIcon  fyne.Resource = theme.NewThemedResource(resourcePrevSvg, nil)
+	nextIcon  fyne.Resource = theme.NewThemedResource(resourceNextSvg, nil)
+	firstIcon fyne.Resource = theme.NewThemedResource(resourceFirstSvg, nil)
+	lastIcon  fyne.Resource = theme.NewThemedResource(resourceLastSvg, nil)
 )
 
 type playButton struct {
@@ -189,16 +194,22 @@ func newNavigateBar() *navigateBar {
 		observers: make([]func(int), 0),
 		canPlay:   false,
 	}
-	bar.playButton = newPlayButton(bar.start, bar.stop)
-	prev := widget.NewButtonWithIcon("", theme.NavigateBackIcon(), bar.prev)
-	next := widget.NewButtonWithIcon("", theme.NavigateNextIcon(), bar.next)
 	slider := widget.NewSlider(0, 1)
 	slider.OnChanged = func(f float64) { bar.change(int(f) + 1) }
 	bar.countSlider = slider
 	count := widget.NewLabel(bar.createCountText())
 	bar.countLabel = count
-	buttons := widget.NewHBox(prev, bar.playButton.Button, next)
+	buttons := createButtons(bar)
 	bar.CanvasObject = fyne.NewContainerWithLayout(layout.NewBorderLayout(
 		nil, nil, buttons, count), buttons, count, slider)
 	return bar
+}
+
+func createButtons(bar *navigateBar) *widget.Box {
+	bar.playButton = newPlayButton(bar.start, bar.stop)
+	first := widget.NewButtonWithIcon("", firstIcon, bar.first)
+	prev := widget.NewButtonWithIcon("", prevIcon, bar.prev)
+	next := widget.NewButtonWithIcon("", nextIcon, bar.next)
+	last := widget.NewButtonWithIcon("", lastIcon, bar.last)
+	return widget.NewHBox(first, prev, bar.playButton.Button, next, last)
 }
