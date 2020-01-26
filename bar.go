@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"strconv"
-	"time"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/layout"
@@ -52,9 +51,10 @@ func (b *playButton) click() {
 type navigateBar struct {
 	fyne.CanvasObject
 
-	countLabel  *widget.Label
-	countSlider *widget.Slider
+	*widget.Label
+	*widget.Slider
 	*playButton
+	*player
 
 	current, total int
 	totalDigit     int
@@ -62,10 +62,6 @@ type navigateBar struct {
 	observers []func(int)
 
 	canPlay bool
-
-	// TODO: fix
-	delayMilliSec int
-	stopPlay      chan bool
 }
 
 func (b *navigateBar) addObserver(f func(int)) {
@@ -77,31 +73,19 @@ func (b *navigateBar) clearObservers() {
 }
 
 func (b *navigateBar) start() {
-	if b.stopPlay != nil || !b.canPlay {
+	if !b.canPlay || b.player.playing() {
 		return
 	}
-	b.stopPlay = make(chan bool)
-	go func() {
-		t := time.NewTicker(time.Duration(b.delayMilliSec) * time.Millisecond)
-		for {
-			select {
-			case <-t.C:
-				b.next()
-			case <-b.stopPlay:
-				t.Stop()
-				return
-			}
-		}
-	}()
 	b.playButton.click()
+	b.player.play()
 }
 
 func (b *navigateBar) stop() {
-	if b.stopPlay != nil {
-		b.stopPlay <- true
-		b.stopPlay = nil
-		b.playButton.click()
+	if !b.player.playing() {
+		return
 	}
+	b.player.pause()
+	b.playButton.click()
 }
 
 func (b *navigateBar) next() {
@@ -159,10 +143,10 @@ func (b *navigateBar) change(n int) {
 }
 
 func (b *navigateBar) update() {
-	b.countLabel.SetText(b.createCountText())
+	b.SetText(b.createCountText())
 	// Note: Slider doesn't have proper method...
-	b.countSlider.Value = float64(b.current - 1)
-	b.countSlider.Refresh()
+	b.Slider.Value = float64(b.current - 1)
+	b.Slider.Refresh()
 	for _, o := range b.observers {
 		o(b.current - 1)
 	}
@@ -182,10 +166,11 @@ func (b *navigateBar) setImage(img *image.GIFImage) {
 	n := img.Length()
 	b.current = 1
 	b.total = n
-	b.countSlider.Max = float64(n - 1)
+	b.Slider.Max = float64(n - 1)
 	b.totalDigit = len(strconv.Itoa(n))
-	b.delayMilliSec = img.DelayMilliSec()[0] // TODO: fix
 	b.canPlay = true
+	b.player = newPlayer(img)
+	b.player.addObserver(b.next)
 	b.update()
 }
 
@@ -201,12 +186,12 @@ func newNavigateBar() *navigateBar {
 }
 
 func createSliderBar(bar *navigateBar) fyne.CanvasObject {
-	bar.countSlider = widget.NewSlider(0, 1)
-	bar.countSlider.OnChanged = func(f float64) { bar.change(int(f) + 1) }
-	bar.countLabel = widget.NewLabel(bar.createCountText())
+	bar.Slider = widget.NewSlider(0, 1)
+	bar.Slider.OnChanged = func(f float64) { bar.change(int(f) + 1) }
+	bar.Label = widget.NewLabel(bar.createCountText())
 	return fyne.NewContainerWithLayout(
-		layout.NewBorderLayout(nil, nil, nil, bar.countLabel),
-		bar.countLabel, bar.countSlider,
+		layout.NewBorderLayout(nil, nil, nil, bar.Label),
+		bar.Label, bar.Slider,
 	)
 }
 
