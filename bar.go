@@ -12,11 +12,44 @@ import (
 	"github.com/lusingander/go-gif-viewer/image"
 )
 
+var (
+	playIcon  fyne.Resource = theme.NewThemedResource(resourcePlaySvg, nil)
+	pauseIcon fyne.Resource = theme.NewThemedResource(resourcePauseSvg, nil)
+)
+
+type playButton struct {
+	*widget.Button
+
+	playing     bool
+	play, pause func()
+}
+
+func newPlayButton(play, pause func()) *playButton {
+	return &playButton{
+		Button:  widget.NewButtonWithIcon("", playIcon, play),
+		playing: false,
+		play:    play,
+		pause:   pause,
+	}
+}
+
+func (b *playButton) click() {
+	if b.playing {
+		b.OnTapped = b.play
+		b.SetIcon(playIcon)
+	} else {
+		b.OnTapped = b.pause
+		b.SetIcon(pauseIcon)
+	}
+	b.playing = !b.playing
+}
+
 type navigateBar struct {
 	fyne.CanvasObject
 
 	countLabel  *widget.Label
 	countSlider *widget.Slider
+	*playButton
 
 	current, total int
 	totalDigit     int
@@ -55,12 +88,14 @@ func (b *navigateBar) start() {
 			}
 		}
 	}()
+	b.playButton.click()
 }
 
 func (b *navigateBar) stop() {
 	if b.stopPlay != nil {
 		b.stopPlay <- true
 		b.stopPlay = nil
+		b.playButton.click()
 	}
 }
 
@@ -154,8 +189,7 @@ func newNavigateBar() *navigateBar {
 		observers: make([]func(int), 0),
 		canPlay:   false,
 	}
-	start := widget.NewButtonWithIcon("", theme.NewThemedResource(resourcePlaySvg, nil), bar.start)
-	stop := widget.NewButtonWithIcon("", theme.NewThemedResource(resourcePauseSvg, nil), bar.stop)
+	bar.playButton = newPlayButton(bar.start, bar.stop)
 	prev := widget.NewButtonWithIcon("", theme.NavigateBackIcon(), bar.prev)
 	next := widget.NewButtonWithIcon("", theme.NavigateNextIcon(), bar.next)
 	slider := widget.NewSlider(0, 1)
@@ -163,7 +197,7 @@ func newNavigateBar() *navigateBar {
 	bar.countSlider = slider
 	count := widget.NewLabel(bar.createCountText())
 	bar.countLabel = count
-	buttons := widget.NewHBox(start, stop, prev, next)
+	buttons := widget.NewHBox(prev, bar.playButton.Button, next)
 	bar.CanvasObject = fyne.NewContainerWithLayout(layout.NewBorderLayout(
 		nil, nil, buttons, count), buttons, count, slider)
 	return bar
