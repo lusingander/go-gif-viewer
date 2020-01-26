@@ -3,7 +3,7 @@ go-gif-viewer
 
 Simple animated GIF viewer with Go and [Fyne](https://fyne.io/)
 
-<img src="./resource/screenshot.png" width=400>
+<img src="./resource/screenshot.gif">
 
 ## Usage
 
