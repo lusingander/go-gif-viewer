@@ -18,15 +18,53 @@ const (
 
 var defaultWindowSize = fyne.NewSize(400, 400)
 
-func loadImage(img *image.GIFImage, v *imageView, b *navigateBar) {
-	v.setImage(img)
-	b.setImage(img)
-	b.addObserver(v.refleshFrame)
+type mainView struct {
+	*fyne.Container
+	*imageView
+	*navigateBar
 }
 
-func clearImage(v *imageView, b *navigateBar) {
-	v.clearImage()
-	b.clearImage()
+func newMainView() *mainView {
+	imageView := newImageView()
+	navigateBar := newNavigateBar()
+	panel := fyne.NewContainerWithLayout(
+		layout.NewBorderLayout(nil, navigateBar.CanvasObject, nil, nil),
+		navigateBar.CanvasObject, imageView.CanvasObject,
+	)
+	return &mainView{
+		Container:   panel,
+		imageView:   imageView,
+		navigateBar: navigateBar,
+	}
+}
+
+func (v *mainView) loadImageFromPath(path string) error {
+	img, err := image.LoadGIFImageFromPath(path)
+	if err != nil {
+		return err
+	}
+	v.loadImage(img)
+	return nil
+}
+
+func (v *mainView) loadImage(img *image.GIFImage) {
+	v.imageView.setImage(img)
+	v.navigateBar.setImage(img)
+	v.navigateBar.addObserver(v.refleshFrame)
+}
+
+func (v *mainView) clearImage() {
+	v.imageView.clearImage()
+	v.navigateBar.clearImage()
+}
+
+func (v *mainView) openFileDialog() {
+	// TODO: https://github.com/sqweek/dialog/issues/24
+	f, err := dialog.File().Filter("GIF", "gif").Load()
+	if err != nil {
+		return
+	}
+	v.loadImageFromPath(f)
 }
 
 func run(args []string) error {
@@ -34,38 +72,16 @@ func run(args []string) error {
 	a.Settings().SetTheme(theme.DarkTheme())
 	w := a.NewWindow(appName)
 	w.Resize(defaultWindowSize)
-	imageView := newImageView()
-	navigateBar := newNavigateBar()
-	panel := fyne.NewContainerWithLayout(layout.NewBorderLayout(
-		nil, navigateBar.CanvasObject, nil, nil), navigateBar.CanvasObject, imageView.CanvasObject)
-	w.SetContent(panel)
+	v := newMainView()
+	w.SetContent(v.Container)
 	w.SetMainMenu(fyne.NewMainMenu(
 		fyne.NewMenu("File",
-			fyne.NewMenuItem("Open", func() {
-				// TODO: refactoring
-				// TODO: https://github.com/sqweek/dialog/issues/24
-				f, err := dialog.File().Filter("GIF", "gif").Load()
-				if err != nil {
-					return
-				}
-				img, err := image.LoadGIFImageFromPath(f)
-				if err != nil {
-					return
-				}
-				loadImage(img, imageView, navigateBar)
-			}),
-			fyne.NewMenuItem("Close", func() {
-				clearImage(imageView, navigateBar)
-			}),
+			fyne.NewMenuItem("Open", v.openFileDialog),
+			fyne.NewMenuItem("Close", v.clearImage),
 		),
 	))
 	if len(args) > 1 {
-		// TODO: refactoring
-		img, err := image.LoadGIFImageFromPath(args[1])
-		if err != nil {
-			return err
-		}
-		loadImage(img, imageView, navigateBar)
+		v.loadImageFromPath(args[1])
 	}
 	w.ShowAndRun()
 	return nil
