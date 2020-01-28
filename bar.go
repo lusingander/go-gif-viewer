@@ -156,7 +156,6 @@ func (b *navigateBar) createCountText() string {
 	if !b.canPlay {
 		return ""
 	}
-	// 桁数によって伸び縮みしておりスライダーも伸び縮みしてしまう？
 	return fmt.Sprintf("%*d/%*d",
 		b.totalDigit, b.current, b.totalDigit, b.total)
 }
@@ -198,6 +197,7 @@ func createSliderBar(bar *navigateBar) fyne.CanvasObject {
 	bar.Slider = widget.NewSlider(0, 1)
 	bar.Slider.OnChanged = func(f float64) { bar.change(int(f) + 1) }
 	bar.Label = widget.NewLabel(bar.createCountText())
+	bar.Label.TextStyle.Monospace = true
 	return fyne.NewContainerWithLayout(
 		layout.NewBorderLayout(nil, nil, nil, bar.Label),
 		bar.Label, bar.Slider,
