@@ -20,22 +20,26 @@ var defaultWindowSize = fyne.NewSize(400, 400)
 
 type mainView struct {
 	*fyne.Container
+
+	*menuBar
 	*imageView
 	*navigateBar
 }
 
 func newMainView() *mainView {
+	mainView := &mainView{}
+	menuBar := createMenuBar(mainView.openFileDialog, mainView.clearImage)
 	imageView := newImageView()
 	navigateBar := newNavigateBar()
 	panel := fyne.NewContainerWithLayout(
-		layout.NewBorderLayout(nil, navigateBar.CanvasObject, nil, nil),
-		navigateBar.CanvasObject, imageView.CanvasObject,
+		layout.NewBorderLayout(menuBar.Toolbar, navigateBar.CanvasObject, nil, nil),
+		menuBar.Toolbar, navigateBar.CanvasObject, imageView.CanvasObject,
 	)
-	return &mainView{
-		Container:   panel,
-		imageView:   imageView,
-		navigateBar: navigateBar,
-	}
+	mainView.Container = panel
+	mainView.menuBar = menuBar
+	mainView.imageView = imageView
+	mainView.navigateBar = navigateBar
+	return mainView
 }
 
 func (v *mainView) loadImageFromPath(path string) error {
