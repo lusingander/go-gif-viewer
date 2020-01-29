@@ -3,11 +3,19 @@ go-gif-viewer
 
 Simple animated GIF viewer with Go and [Fyne](https://fyne.io/)
 
-<img src="./resource/screenshot.gif">
+<img src="./resource/screenshot.gif" width=400>
+
+## Installation
+
+`$ go get github.com/lusingander/go-gif-viewer`
 
 ## Usage
 
 `$ go-gif-viewer sample.gif`
+
+or
+
+`$ go-gif-viewer` and select `Open` from `File` menu.
 
 ----
 
