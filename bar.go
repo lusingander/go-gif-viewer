@@ -15,6 +15,9 @@ var (
 	openIcon  fyne.Resource = theme.NewThemedResource(resourceOpenSvg, nil)
 	closeIcon fyne.Resource = theme.NewThemedResource(resourceCloseSvg, nil)
 
+	zoomInIcon  fyne.Resource = theme.NewThemedResource(theme.ZoomInIcon(), nil)
+	zoomOutIcon fyne.Resource = theme.NewThemedResource(theme.ZoomOutIcon(), nil)
+
 	playIcon  fyne.Resource = theme.NewThemedResource(resourcePlaySvg, nil)
 	pauseIcon fyne.Resource = theme.NewThemedResource(resourcePauseSvg, nil)
 
@@ -28,11 +31,14 @@ type menuBar struct {
 	*widget.Toolbar
 }
 
-func newMenuBar(open, close func()) *menuBar {
+func newMenuBar(open, close, zoomIn, zoomOut func()) *menuBar {
 	return &menuBar{
 		Toolbar: widget.NewToolbar(
 			widget.NewToolbarAction(openIcon, open),
 			widget.NewToolbarAction(closeIcon, close),
+			widget.NewToolbarSpacer(),
+			widget.NewToolbarAction(zoomInIcon, zoomIn),
+			widget.NewToolbarAction(zoomOutIcon, zoomOut),
 		),
 	}
 }

@@ -28,7 +28,12 @@ type mainView struct {
 
 func newMainView() *mainView {
 	mainView := &mainView{}
-	menuBar := newMenuBar(mainView.openFileDialog, mainView.clearImage)
+	menuBar := newMenuBar(
+		mainView.openFileDialog,
+		mainView.clearImage,
+		mainView.zoomIn,
+		mainView.zoomOut,
+	)
 	imageView := newImageView()
 	navigateBar := newNavigateBar()
 	panel := fyne.NewContainerWithLayout(
@@ -69,6 +74,16 @@ func (v *mainView) openFileDialog() {
 		return
 	}
 	v.loadImageFromPath(f)
+}
+
+func (v *mainView) zoomIn() {
+	v.imageView.zoomIn()
+	v.navigateBar.update()
+}
+
+func (v *mainView) zoomOut() {
+	v.imageView.zoomOut()
+	v.navigateBar.update()
 }
 
 func run(args []string) error {
