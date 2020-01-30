@@ -28,7 +28,7 @@ type mainView struct {
 
 func newMainView() *mainView {
 	mainView := &mainView{}
-	menuBar := createMenuBar(mainView.openFileDialog, mainView.clearImage)
+	menuBar := newMenuBar(mainView.openFileDialog, mainView.clearImage)
 	imageView := newImageView()
 	navigateBar := newNavigateBar()
 	panel := fyne.NewContainerWithLayout(

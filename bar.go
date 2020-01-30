@@ -28,7 +28,7 @@ type menuBar struct {
 	*widget.Toolbar
 }
 
-func createMenuBar(open, close func()) *menuBar {
+func newMenuBar(open, close func()) *menuBar {
 	return &menuBar{
 		Toolbar: widget.NewToolbar(
 			widget.NewToolbarAction(openIcon, open),
