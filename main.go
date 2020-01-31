@@ -98,6 +98,10 @@ func run(args []string) error {
 			fyne.NewMenuItem("Open", v.openFileDialog),
 			fyne.NewMenuItem("Close", v.clearImage),
 		),
+		fyne.NewMenu("View",
+			fyne.NewMenuItem("Zoom In", v.zoomIn),
+			fyne.NewMenuItem("Zoom Out", v.zoomOut),
+		),
 	))
 	if len(args) > 1 {
 		v.loadImageFromPath(args[1])
