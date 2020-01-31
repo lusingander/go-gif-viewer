@@ -86,6 +86,19 @@ func (v *mainView) zoomOut() {
 	v.navigateBar.update()
 }
 
+func (v *mainView) keys(e *fyne.KeyEvent) {
+	switch e.Name {
+	case fyne.KeyLeft:
+		v.navigateBar.prev()
+	case fyne.KeyRight:
+		v.navigateBar.next()
+	case fyne.KeyUp:
+		v.navigateBar.first()
+	case fyne.KeyDown:
+		v.navigateBar.last()
+	}
+}
+
 func run(args []string) error {
 	a := app.New()
 	a.Settings().SetTheme(theme.DarkTheme())
@@ -103,6 +116,7 @@ func run(args []string) error {
 			fyne.NewMenuItem("Zoom Out", v.zoomOut),
 		),
 	))
+	w.Canvas().SetOnTypedKey(v.keys)
 	if len(args) > 1 {
 		v.loadImageFromPath(args[1])
 	}
