@@ -96,6 +96,8 @@ func (v *mainView) keys(e *fyne.KeyEvent) {
 		v.navigateBar.first()
 	case fyne.KeyDown:
 		v.navigateBar.last()
+	case fyne.KeySpace:
+		v.navigateBar.pressPlayButton()
 	}
 }
 

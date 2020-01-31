@@ -94,6 +94,14 @@ func (b *navigateBar) clearObservers() {
 	b.observers = make([]func(int), 0)
 }
 
+func (b *navigateBar) pressPlayButton() {
+	if b.player.playing() {
+		b.stop()
+	} else {
+		b.start()
+	}
+}
+
 func (b *navigateBar) start() {
 	if !b.canPlay || b.player.playing() {
 		return
