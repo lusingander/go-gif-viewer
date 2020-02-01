@@ -201,8 +201,6 @@ func (b *navigateBar) setImage(img *image.GIFImage) {
 	b.Slider.Max = float64(n - 1)
 	b.totalDigit = len(strconv.Itoa(n))
 	b.canPlay = true
-	b.player = newPlayer(img)
-	b.player.addObserver(b.next)
 	b.update()
 }
 
@@ -211,8 +209,11 @@ func (b *navigateBar) clearImage() {
 	b.current = 1
 	b.Slider.Max = 1
 	b.canPlay = false
-	b.player = nil
 	b.update()
+}
+
+func (b *navigateBar) setPlayer(p *player) {
+	b.player = p
 }
 
 func newNavigateBar() *navigateBar {

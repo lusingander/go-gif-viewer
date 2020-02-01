@@ -24,6 +24,8 @@ type mainView struct {
 	*menuBar
 	*imageView
 	*navigateBar
+
+	*player
 }
 
 func newMainView() *mainView {
@@ -60,11 +62,18 @@ func (v *mainView) loadImage(img *image.GIFImage) {
 	v.imageView.setImage(img)
 	v.navigateBar.setImage(img)
 	v.navigateBar.addObserver(v.refleshFrame)
+
+	v.player = newPlayer(img)
+	v.player.addObserver(v.navigateBar.next)
+	v.navigateBar.setPlayer(v.player)
 }
 
 func (v *mainView) clearImage() {
 	v.imageView.clearImage()
 	v.navigateBar.clearImage()
+
+	v.player = nil
+	v.navigateBar.setPlayer(v.player)
 }
 
 func (v *mainView) openFileDialog() {
