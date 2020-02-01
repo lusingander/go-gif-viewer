@@ -9,6 +9,13 @@ import (
 	"github.com/nfnt/resize"
 )
 
+const (
+	scaleDefault = 1.0
+	scaleMax     = 2.0 - 0.01
+	scaleMin     = 0.1 + 0.01
+	scaleStep    = 0.1
+)
+
 type imageView struct {
 	*canvas.Image
 	fyne.CanvasObject
@@ -36,25 +43,25 @@ func newImageView() *imageView {
 	return &imageView{
 		Image:        image,
 		CanvasObject: canvas,
-		scale:        1.0,
+		scale:        scaleDefault,
 	}
 }
 
 func (v *imageView) zoomIn() {
-	if v.scale < 2.0 {
-		v.scale += 0.1
+	if v.scale < scaleMax {
+		v.scale += scaleStep
 	}
 }
 
 func (v *imageView) zoomOut() {
-	if v.scale > 0.2 {
-		v.scale -= 0.1
+	if v.scale > scaleMin {
+		v.scale -= scaleStep
 	}
 }
 
 func (v *imageView) setImage(img *image.GIFImage) {
 	v.GIFImage = img
-	v.scale = 1.0
+	v.scale = scaleDefault
 	v.refleshFrame(0)
 }
 
