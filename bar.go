@@ -27,6 +27,17 @@ var (
 	lastIcon  fyne.Resource = theme.NewThemedResource(resourceLastSvg, nil)
 )
 
+var speeds = []string{
+	"0.25x",
+	"0.5x",
+	"1.0x",
+	"2.0x",
+}
+
+const (
+	defaultSpeedIndex = 2 // 1.0x
+)
+
 type menuBar struct {
 	fyne.CanvasObject
 
@@ -37,17 +48,11 @@ type menuBar struct {
 }
 
 func createSpeedSelect() *widget.Select {
-	speeds := []string{
-		"0.25x",
-		"0.5x",
-		"1.0x",
-		"2.0x",
-	}
 	// Note: when using NewSelect, defaultPlaceHolder cannot be set, so the width of Select is specified
 	// TODO: do not show shadow / move to toolbar
 	sel := &widget.Select{
 		BaseWidget:  widget.BaseWidget{},
-		Selected:    "1.0x",
+		Selected:    speeds[defaultSpeedIndex],
 		Options:     speeds,
 		PlaceHolder: ".", // this value determines the width!
 	}
@@ -82,7 +87,7 @@ func (b *menuBar) setPlayer(p *player) {
 			b.player.setSpeed(parseSpeed(s))
 		}
 	}
-	b.Select.SetSelected("1.0x")
+	b.Select.SetSelected(speeds[defaultSpeedIndex])
 }
 
 func (b *menuBar) currentSpeed() float64 {
