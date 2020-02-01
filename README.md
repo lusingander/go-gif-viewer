@@ -3,7 +3,7 @@ go-gif-viewer
 
 Simple animated GIF viewer with Go and [Fyne](https://fyne.io/)
 
-<img src="./resource/screenshot.gif" width=400>
+<img src="./resource/document/screenshot.gif" width=400>
 
 ## Installation
 
@@ -26,6 +26,8 @@ or
 |↑|Go to first frame|<img src="./resource/icons/svg/first.svg" width=16>|
 |↓|Go to last frame|<img src="./resource/icons/svg/last.svg" width=16>|
 |Space|Play / Pause|<img src="./resource/icons/svg/play.svg" width=16> / <img src="./resource/icons/svg/pause.svg" width=16>|
+|+|Zoom in|<img src="./resource/document/zoom-in.svg" width=16>|
+|-|Zoom out|<img src="./resource/document/zoom-out.svg" width=16>|
 
 ----
 

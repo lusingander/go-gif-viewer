@@ -86,7 +86,7 @@ func (v *mainView) zoomOut() {
 	v.navigateBar.update()
 }
 
-func (v *mainView) keys(e *fyne.KeyEvent) {
+func (v *mainView) handleKeys(e *fyne.KeyEvent) {
 	switch e.Name {
 	case fyne.KeyLeft:
 		v.navigateBar.prev()
@@ -98,6 +98,15 @@ func (v *mainView) keys(e *fyne.KeyEvent) {
 		v.navigateBar.last()
 	case fyne.KeySpace:
 		v.navigateBar.pressPlayButton()
+	}
+}
+
+func (v *mainView) handleRune(r rune) {
+	switch r {
+	case '+':
+		v.zoomIn()
+	case '-':
+		v.zoomOut()
 	}
 }
 
@@ -118,7 +127,8 @@ func run(args []string) error {
 			fyne.NewMenuItem("Zoom Out", v.zoomOut),
 		),
 	))
-	w.Canvas().SetOnTypedKey(v.keys)
+	w.Canvas().SetOnTypedKey(v.handleKeys)
+	w.Canvas().SetOnTypedRune(v.handleRune)
 	if len(args) > 1 {
 		v.loadImageFromPath(args[1])
 	}
