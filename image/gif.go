@@ -5,8 +5,6 @@ import (
 	"image/color"
 	"image/gif"
 	"os"
-
-	"fyne.io/fyne"
 )
 
 type GIFImage struct {
@@ -14,8 +12,9 @@ type GIFImage struct {
 	images []image.Image
 }
 
-func (g *GIFImage) Size() fyne.Size {
-	return getImageSize(g.origin)
+func (g *GIFImage) Size() (w, h int) {
+	c := g.origin.Config
+	return c.Width, c.Height
 }
 
 func (g *GIFImage) Get(i int) image.Image {
@@ -73,11 +72,6 @@ func loadGIF(path string) (*gif.GIF, error) {
 	}
 	defer f.Close()
 	return gif.DecodeAll(f)
-}
-
-func getImageSize(g *gif.GIF) fyne.Size {
-	s := g.Image[0].Rect.Size()
-	return fyne.NewSize(s.X, s.Y)
 }
 
 func isOpaque(c color.Color) bool {

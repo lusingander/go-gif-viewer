@@ -82,8 +82,8 @@ func (v *imageView) reflesh() {
 }
 
 func (v *imageView) scaledImageSize() (uint, uint) {
-	size := v.GIFImage.Size()
-	w := float64(size.Width) * v.scale
-	h := float64(size.Height) * v.scale
-	return uint(w), uint(h)
+	w, h := v.GIFImage.Size()
+	fw := float64(w) * v.scale
+	fh := float64(h) * v.scale
+	return uint(fw), uint(fh)
 }
