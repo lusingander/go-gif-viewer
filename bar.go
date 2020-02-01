@@ -95,6 +95,9 @@ func (b *navigateBar) clearObservers() {
 }
 
 func (b *navigateBar) pressPlayButton() {
+	if b.player == nil {
+		return
+	}
 	if b.player.playing() {
 		b.stop()
 	} else {
