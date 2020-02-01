@@ -39,8 +39,8 @@ func newMainView() *mainView {
 	imageView := newImageView()
 	navigateBar := newNavigateBar()
 	panel := fyne.NewContainerWithLayout(
-		layout.NewBorderLayout(menuBar.Toolbar, navigateBar.CanvasObject, nil, nil),
-		menuBar.Toolbar, navigateBar.CanvasObject, imageView.CanvasObject,
+		layout.NewBorderLayout(menuBar.CanvasObject, navigateBar.CanvasObject, nil, nil),
+		menuBar.CanvasObject, navigateBar.CanvasObject, imageView.CanvasObject,
 	)
 	mainView.Container = panel
 	mainView.menuBar = menuBar
@@ -63,8 +63,9 @@ func (v *mainView) loadImage(img *image.GIFImage) {
 	v.navigateBar.setImage(img)
 	v.navigateBar.addObserver(v.refleshFrame)
 
-	v.player = newPlayer(img)
+	v.player = newPlayer(img, v.menuBar.currentSpeed())
 	v.player.addObserver(v.navigateBar.next)
+	v.menuBar.setPlayer(v.player)
 	v.navigateBar.setPlayer(v.player)
 }
 
@@ -73,6 +74,7 @@ func (v *mainView) clearImage() {
 	v.navigateBar.clearImage()
 
 	v.player = nil
+	v.menuBar.setPlayer(v.player)
 	v.navigateBar.setPlayer(v.player)
 }
 

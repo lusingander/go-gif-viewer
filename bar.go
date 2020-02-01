@@ -28,19 +28,70 @@ var (
 )
 
 type menuBar struct {
+	fyne.CanvasObject
+
 	*widget.Toolbar
+	*widget.Select
+
+	*player
+}
+
+func createSpeedSelect() *widget.Select {
+	speeds := []string{
+		"0.25x",
+		"0.5x",
+		"1.0x",
+		"2.0x",
+	}
+	// Note: when using NewSelect, defaultPlaceHolder cannot be set, so the width of Select is specified
+	// TODO: do not show shadow / move to toolbar
+	sel := &widget.Select{
+		BaseWidget:  widget.BaseWidget{},
+		Selected:    "1.0x",
+		Options:     speeds,
+		PlaceHolder: ".", // this value determines the width!
+	}
+	widget.Renderer(sel).Layout(sel.MinSize())
+	return sel
 }
 
 func newMenuBar(open, close, zoomIn, zoomOut func()) *menuBar {
+	toolBar := widget.NewToolbar(
+		widget.NewToolbarAction(openIcon, open),
+		widget.NewToolbarAction(closeIcon, close),
+		widget.NewToolbarSpacer(),
+		widget.NewToolbarAction(zoomInIcon, zoomIn),
+		widget.NewToolbarAction(zoomOutIcon, zoomOut),
+	)
+	sppedSelect := createSpeedSelect()
 	return &menuBar{
-		Toolbar: widget.NewToolbar(
-			widget.NewToolbarAction(openIcon, open),
-			widget.NewToolbarAction(closeIcon, close),
-			widget.NewToolbarSpacer(),
-			widget.NewToolbarAction(zoomInIcon, zoomIn),
-			widget.NewToolbarAction(zoomOutIcon, zoomOut),
+		CanvasObject: fyne.NewContainerWithLayout(
+			layout.NewBorderLayout(nil, nil, nil, sppedSelect),
+			sppedSelect, toolBar,
 		),
+		Toolbar: toolBar,
+		Select:  sppedSelect,
 	}
+}
+
+func (b *menuBar) setPlayer(p *player) {
+	b.player = p
+	b.Select.OnChanged = func(s string) {
+		// TODO: fix
+		if b.player != nil {
+			b.player.setSpeed(parseSpeed(s))
+		}
+	}
+	b.Select.SetSelected("1.0x")
+}
+
+func (b *menuBar) currentSpeed() float64 {
+	return parseSpeed(b.Select.Selected)
+}
+
+func parseSpeed(s string) float64 {
+	f, _ := strconv.ParseFloat(s[:len(s)-1], 64)
+	return f
 }
 
 type playButton struct {
