@@ -34,9 +34,9 @@ var speeds = []string{
 	"2.0x",
 }
 
-const (
-	defaultSpeedIndex = 2 // 1.0x
-)
+func defaultSpeed() string {
+	return speeds[2] // 1.0x
+}
 
 type menuBar struct {
 	fyne.CanvasObject
@@ -52,7 +52,7 @@ func createSpeedSelect() *widget.Select {
 	// TODO: do not show shadow / move to toolbar
 	sel := &widget.Select{
 		BaseWidget:  widget.BaseWidget{},
-		Selected:    speeds[defaultSpeedIndex],
+		Selected:    defaultSpeed(),
 		Options:     speeds,
 		PlaceHolder: ".", // this value determines the width!
 	}
@@ -87,7 +87,7 @@ func (b *menuBar) setPlayer(p *player) {
 			b.player.setSpeed(parseSpeed(s))
 		}
 	}
-	b.Select.SetSelected(speeds[defaultSpeedIndex])
+	b.Select.SetSelected(defaultSpeed())
 }
 
 func (b *menuBar) currentSpeed() float64 {
