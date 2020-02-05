@@ -6,10 +6,11 @@ import (
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
+	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	"github.com/lusingander/go-gif-viewer/image"
-	"github.com/sqweek/dialog"
+	fd "github.com/sqweek/dialog"
 )
 
 const (
@@ -19,6 +20,8 @@ const (
 var defaultWindowSize = fyne.NewSize(400, 400)
 
 type mainView struct {
+	fyne.Window
+
 	*fyne.Container
 
 	*menuBar
@@ -28,8 +31,10 @@ type mainView struct {
 	*player
 }
 
-func newMainView() *mainView {
-	mainView := &mainView{}
+func newMainView(w fyne.Window) *mainView {
+	mainView := &mainView{
+		Window: w,
+	}
 	menuBar := newMenuBar(
 		mainView.openFileDialog,
 		mainView.clearImage,
@@ -80,11 +85,18 @@ func (v *mainView) clearImage() {
 
 func (v *mainView) openFileDialog() {
 	// TODO: https://github.com/sqweek/dialog/issues/24
-	f, err := dialog.File().Filter("GIF", "gif").Load()
+	f, err := fd.File().Filter("GIF", "gif").Load()
 	if err != nil {
+		if err != fd.ErrCancelled {
+			dialog.ShowError(err, v.Window)
+		}
 		return
 	}
-	v.loadImageFromPath(f)
+	err = v.loadImageFromPath(f)
+	if err != nil {
+		dialog.ShowError(err, v.Window)
+		return
+	}
 }
 
 func (v *mainView) zoomIn() {
@@ -126,7 +138,7 @@ func run(args []string) error {
 	a.Settings().SetTheme(theme.DarkTheme())
 	w := a.NewWindow(appName)
 	w.Resize(defaultWindowSize)
-	v := newMainView()
+	v := newMainView(w)
 	w.SetContent(v.Container)
 	w.SetMainMenu(fyne.NewMainMenu(
 		fyne.NewMenu("File",
@@ -141,7 +153,10 @@ func run(args []string) error {
 	w.Canvas().SetOnTypedKey(v.handleKeys)
 	w.Canvas().SetOnTypedRune(v.handleRune)
 	if len(args) > 1 {
-		v.loadImageFromPath(args[1])
+		err := v.loadImageFromPath(args[1])
+		if err != nil {
+			dialog.ShowError(err, w)
+		}
 	}
 	w.ShowAndRun()
 	return nil
