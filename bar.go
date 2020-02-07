@@ -15,6 +15,8 @@ var (
 	openIcon  fyne.Resource = theme.NewThemedResource(resourceOpenSvg, nil)
 	closeIcon fyne.Resource = theme.NewThemedResource(resourceCloseSvg, nil)
 
+	infoIcon fyne.Resource = theme.NewThemedResource(resourceInfoSvg, nil)
+
 	zoomInIcon  fyne.Resource = theme.NewThemedResource(theme.ZoomInIcon(), nil)
 	zoomOutIcon fyne.Resource = theme.NewThemedResource(theme.ZoomOutIcon(), nil)
 
@@ -60,10 +62,11 @@ func createSpeedSelect() *widget.Select {
 	return sel
 }
 
-func newMenuBar(open, close, zoomIn, zoomOut func()) *menuBar {
+func newMenuBar(open, close, info, zoomIn, zoomOut func()) *menuBar {
 	toolBar := widget.NewToolbar(
 		widget.NewToolbarAction(openIcon, open),
 		widget.NewToolbarAction(closeIcon, close),
+		widget.NewToolbarAction(infoIcon, info),
 		widget.NewToolbarSpacer(),
 		widget.NewToolbarAction(zoomInIcon, zoomIn),
 		widget.NewToolbarAction(zoomOutIcon, zoomOut),

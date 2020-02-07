@@ -38,6 +38,7 @@ func newMainView(w fyne.Window) *mainView {
 	menuBar := newMenuBar(
 		mainView.openFileDialog,
 		mainView.clearImage,
+		mainView.info,
 		mainView.zoomIn,
 		mainView.zoomOut,
 	)
@@ -98,6 +99,13 @@ func (v *mainView) openFileDialog() {
 		dialog.ShowError(err, v.Window)
 		return
 	}
+}
+
+func (v *mainView) info() {
+	if v.imageView.GIFImage == nil {
+		return
+	}
+	showInfoWindow(v.imageView.GIFImage)
 }
 
 func (v *mainView) zoomIn() {
