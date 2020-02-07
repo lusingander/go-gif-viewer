@@ -86,6 +86,7 @@ func (v *mainView) clearImage() {
 func (v *mainView) openFileDialog() {
 	// TODO: https://github.com/sqweek/dialog/issues/24
 	f, err := fd.File().Filter("GIF", "gif").Load()
+	defer v.Window.RequestFocus() // dialog does not return focus...
 	if err != nil {
 		if err != fd.ErrCancelled {
 			dialog.ShowError(err, v.Window)
