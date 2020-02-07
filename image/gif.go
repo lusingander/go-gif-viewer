@@ -7,9 +7,23 @@ import (
 	"os"
 )
 
+type fileInfo struct {
+	name     string
+	sizeByte int64
+}
+
 type GIFImage struct {
 	origin *gif.GIF
+	*fileInfo
 	images []image.Image
+}
+
+func (g *GIFImage) FileName() string {
+	return g.fileInfo.name
+}
+
+func (g *GIFImage) FileSizeByte() int64 {
+	return g.fileInfo.sizeByte
 }
 
 func (g *GIFImage) Size() (w, h int) {
@@ -34,21 +48,25 @@ func (g *GIFImage) DelayMilliSec() []int {
 }
 
 func LoadGIFImageFromPath(path string) (*GIFImage, error) {
-	g, err := loadGIF(path)
+	g, i, err := loadGIF(path)
 	if err != nil {
 		return nil, err
 	}
-	return newGIFImage(g)
+	return newGIFImage(g, i)
 }
 
-func newGIFImage(g *gif.GIF) (*GIFImage, error) {
+func newGIFImage(g *gif.GIF, i *fileInfo) (*GIFImage, error) {
 	rect := g.Image[0].Rect
 	images := make([]image.Image, len(g.Image))
 	images[0] = g.Image[0]
 	for i := 1; i < len(g.Image); i++ {
 		images[i] = restoreFrame(g.Image[i], images[i-1], rect)
 	}
-	return &GIFImage{g, images}, nil
+	return &GIFImage{
+		origin:   g,
+		fileInfo: i,
+		images:   images,
+	}, nil
 }
 
 func restoreFrame(current *image.Paletted, prev image.Image, rect image.Rectangle) image.Image {
@@ -65,13 +83,32 @@ func restoreFrame(current *image.Paletted, prev image.Image, rect image.Rectangl
 	return img
 }
 
-func loadGIF(path string) (*gif.GIF, error) {
+func loadGIF(path string) (*gif.GIF, *fileInfo, error) {
 	f, err := os.Open(path)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer f.Close()
+	i, err := getFileInfo(f)
+	if err != nil {
+		return nil, nil, err
+	}
+	g, err := gif.DecodeAll(f)
+	if err != nil {
+		return nil, nil, err
+	}
+	return g, i, nil
+}
+
+func getFileInfo(f *os.File) (*fileInfo, error) {
+	i, err := f.Stat()
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
-	return gif.DecodeAll(f)
+	return &fileInfo{
+		name:     i.Name(),
+		sizeByte: i.Size(),
+	}, nil
 }
 
 func isOpaque(c color.Color) bool {
