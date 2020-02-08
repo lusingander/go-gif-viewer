@@ -12,33 +12,40 @@ type fileInfo struct {
 	sizeByte int64
 }
 
+// GIFImage represents GIF iamge file that can be displayed in frame units.
 type GIFImage struct {
 	origin *gif.GIF
 	*fileInfo
 	images []image.Image
 }
 
+// FileName returns the original file name.
 func (g *GIFImage) FileName() string {
 	return g.fileInfo.name
 }
 
+// FileSizeByte returns the original file size in bytes.
 func (g *GIFImage) FileSizeByte() int64 {
 	return g.fileInfo.sizeByte
 }
 
+// Size returns width and height of the image.
 func (g *GIFImage) Size() (w, h int) {
 	c := g.origin.Config
 	return c.Width, c.Height
 }
 
+// Get returns the image of ith frame.
 func (g *GIFImage) Get(i int) image.Image {
 	return g.images[i]
 }
 
+// Length returns the number of frames.
 func (g *GIFImage) Length() int {
 	return len(g.images)
 }
 
+// DelayMilliSec returns delay times in milliseconds.
 func (g *GIFImage) DelayMilliSec() []int {
 	delay := make([]int, g.Length())
 	for i, d := range g.origin.Delay {
@@ -47,6 +54,7 @@ func (g *GIFImage) DelayMilliSec() []int {
 	return delay
 }
 
+// LoadGIFImageFromPath reads the specified gif image file.
 func LoadGIFImageFromPath(path string) (*GIFImage, error) {
 	g, i, err := loadGIF(path)
 	if err != nil {
