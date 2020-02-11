@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/dialog"
+	"fyne.io/fyne/driver/desktop"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	"github.com/lusingander/go-gif-viewer/image"
@@ -142,6 +143,19 @@ func (v *mainView) handleRune(r rune) {
 	}
 }
 
+func (v *mainView) addShortcuts() {
+	// TODO: want to use ctrl on Windows...
+	v.addSuperShotrcuts(fyne.KeyO, v.openFileDialog)
+	v.addSuperShotrcuts(fyne.KeyW, v.clearImage)
+}
+
+func (v *mainView) addSuperShotrcuts(key fyne.KeyName, f func()) {
+	v.Window.Canvas().AddShortcut(
+		&desktop.CustomShortcut{KeyName: key, Modifier: desktop.SuperModifier},
+		func(_ fyne.Shortcut) { f() },
+	)
+}
+
 func run(args []string) error {
 	a := app.New()
 	a.Settings().SetTheme(theme.DarkTheme())
@@ -161,6 +175,7 @@ func run(args []string) error {
 	))
 	w.Canvas().SetOnTypedKey(v.handleKeys)
 	w.Canvas().SetOnTypedRune(v.handleRune)
+	v.addShortcuts()
 	if len(args) > 1 {
 		err := v.loadImageFromPath(args[1])
 		if err != nil {

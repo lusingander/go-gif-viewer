@@ -28,6 +28,8 @@ or
 |Space|Play / Pause|<img src="./resource/icons/svg/play.svg" width=16> / <img src="./resource/icons/svg/pause.svg" width=16>|
 |+|Zoom in|<img src="./resource/document/zoom-in.svg" width=16>|
 |-|Zoom out|<img src="./resource/document/zoom-out.svg" width=16>|
+|⌘O|Open image file|<img src="./resource/icons/svg/open.svg" width=16>|
+|⌘W|Close image file|<img src="./resource/icons/svg/close.svg" width=16>|
 
 ----
 
