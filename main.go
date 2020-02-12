@@ -40,6 +40,7 @@ func newMainView(w fyne.Window) *mainView {
 		mainView.openFileDialog,
 		mainView.clearImage,
 		mainView.info,
+		mainView.credits,
 		mainView.zoomIn,
 		mainView.zoomOut,
 	)
@@ -107,6 +108,10 @@ func (v *mainView) info() {
 		return
 	}
 	showInfoWindow(v.imageView.GIFImage)
+}
+
+func (v *mainView) credits() {
+	CreditsWindow(fyne.CurrentApp()).Show()
 }
 
 func (v *mainView) zoomIn() {
