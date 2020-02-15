@@ -145,6 +145,10 @@ func (v *mainView) handleRune(r rune) {
 		v.zoomIn()
 	case '-':
 		v.zoomOut()
+	case '[':
+		v.menuBar.decreaseSpeed()
+	case ']':
+		v.menuBar.increaseSpeed()
 	}
 }
 

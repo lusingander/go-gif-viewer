@@ -104,6 +104,28 @@ func parseSpeed(s string) float64 {
 	return f
 }
 
+func (b *menuBar) increaseSpeed() {
+	// TODO: fix
+	for i := 0; i < len(speeds)-1; i++ {
+		if speeds[i] == b.Selected {
+			b.SetSelected(speeds[i+1])
+			b.player.setSpeed(b.currentSpeed())
+			return
+		}
+	}
+}
+
+func (b *menuBar) decreaseSpeed() {
+	// TODO: fix
+	for i := 1; i < len(speeds); i++ {
+		if speeds[i] == b.Selected {
+			b.SetSelected(speeds[i-1])
+			b.player.setSpeed(b.currentSpeed())
+			return
+		}
+	}
+}
+
 type playButton struct {
 	*widget.Button
 

@@ -26,8 +26,12 @@ or
 |↑|Go to first frame|<img src="./resource/icons/svg/first.svg" width=16>|
 |↓|Go to last frame|<img src="./resource/icons/svg/last.svg" width=16>|
 |Space|Play / Pause|<img src="./resource/icons/svg/play.svg" width=16> / <img src="./resource/icons/svg/pause.svg" width=16>|
+||||
 |+|Zoom in|<img src="./resource/document/zoom-in.svg" width=16>|
 |-|Zoom out|<img src="./resource/document/zoom-out.svg" width=16>|
+|[|Decrease playback speed|-|
+|]|Increase playback speed|-|
+||||
 |⌘O|Open image file|<img src="./resource/icons/svg/open.svg" width=16>|
 |⌘W|Close image file|<img src="./resource/icons/svg/close.svg" width=16>|
 
