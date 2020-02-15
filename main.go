@@ -127,15 +127,15 @@ func (v *mainView) zoomOut() {
 func (v *mainView) handleKeys(e *fyne.KeyEvent) {
 	switch e.Name {
 	case fyne.KeyLeft:
-		v.navigateBar.prev()
+		v.prev()
 	case fyne.KeyRight:
-		v.navigateBar.next()
+		v.next()
 	case fyne.KeyUp:
-		v.navigateBar.first()
+		v.first()
 	case fyne.KeyDown:
-		v.navigateBar.last()
+		v.last()
 	case fyne.KeySpace:
-		v.navigateBar.pressPlayButton()
+		v.pressPlayButton()
 	}
 }
 
@@ -146,9 +146,9 @@ func (v *mainView) handleRune(r rune) {
 	case '-':
 		v.zoomOut()
 	case '[':
-		v.menuBar.decreaseSpeed()
+		v.decreaseSpeed()
 	case ']':
-		v.menuBar.increaseSpeed()
+		v.increaseSpeed()
 	}
 }
 
