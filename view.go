@@ -39,7 +39,6 @@ func newImageView() *imageView {
 		layout.NewSpacer(),
 	)
 	canvas := widget.NewScrollContainer(imageBox)
-	canvas.Resize(defaultWindowSize)
 	return &imageView{
 		Image:        image,
 		CanvasObject: canvas,
