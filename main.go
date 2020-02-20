@@ -103,15 +103,32 @@ func (v *mainView) openFileDialog() {
 	}
 }
 
+var (
+	isInfoWindowOpening    bool
+	isCreditsWindowOpening bool
+)
+
 func (v *mainView) info() {
 	if v.imageView.GIFImage == nil {
 		return
 	}
-	showInfoWindow(v.imageView.GIFImage)
+	if isInfoWindowOpening {
+		return
+	}
+	w := newInfoWindow(v.imageView.GIFImage)
+	w.SetOnClosed(func() { isInfoWindowOpening = false })
+	w.Show()
+	isInfoWindowOpening = true
 }
 
 func (v *mainView) credits() {
-	CreditsWindow(fyne.CurrentApp()).Show()
+	if isCreditsWindowOpening {
+		return
+	}
+	w := CreditsWindow(fyne.CurrentApp())
+	w.SetOnClosed(func() { isCreditsWindowOpening = false })
+	w.Show()
+	isCreditsWindowOpening = true
 }
 
 func (v *mainView) zoomIn() {

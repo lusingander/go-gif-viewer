@@ -12,12 +12,7 @@ const (
 	infoWindowName = "Info"
 )
 
-var isInfoWindowOpening bool
-
-func showInfoWindow(gif *image.GIFImage) {
-	if isInfoWindowOpening {
-		return
-	}
+func newInfoWindow(gif *image.GIFImage) fyne.Window {
 	w := fyne.CurrentApp().NewWindow(infoWindowName)
 	w.SetContent(
 		widget.NewVBox(
@@ -27,9 +22,7 @@ func showInfoWindow(gif *image.GIFImage) {
 			label("Frame count", gif.Length()),
 		),
 	)
-	w.SetOnClosed(func() { isInfoWindowOpening = false })
-	w.Show()
-	isInfoWindowOpening = true
+	return w
 }
 
 func formatFileSize(gif *image.GIFImage) string {
