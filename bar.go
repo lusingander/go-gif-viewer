@@ -109,6 +109,9 @@ func parseSpeed(s string) float64 {
 
 func (b *menuBar) increaseSpeed() {
 	// TODO: fix
+	if b.player == nil {
+		return
+	}
 	for i := 0; i < len(speeds)-1; i++ {
 		if speeds[i] == b.Selected {
 			b.SetSelected(speeds[i+1])
@@ -120,6 +123,9 @@ func (b *menuBar) increaseSpeed() {
 
 func (b *menuBar) decreaseSpeed() {
 	// TODO: fix
+	if b.player == nil {
+		return
+	}
 	for i := 1; i < len(speeds); i++ {
 		if speeds[i] == b.Selected {
 			b.SetSelected(speeds[i-1])
