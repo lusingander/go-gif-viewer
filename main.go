@@ -16,6 +16,7 @@ import (
 
 const (
 	appName = "GIF Viewer"
+	version = "0.1.0"
 )
 
 var defaultWindowSize = fyne.NewSize(400, 400)
@@ -41,6 +42,7 @@ func newMainView(w fyne.Window) *mainView {
 		mainView.clearImage,
 		mainView.info,
 		mainView.credits,
+		mainView.about,
 		mainView.zoomIn,
 		mainView.zoomOut,
 	)
@@ -106,6 +108,7 @@ func (v *mainView) openFileDialog() {
 var (
 	isInfoWindowOpening    bool
 	isCreditsWindowOpening bool
+	isAboutWindowOpening   bool
 )
 
 func (v *mainView) info() {
@@ -129,6 +132,16 @@ func (v *mainView) credits() {
 	w.SetOnClosed(func() { isCreditsWindowOpening = false })
 	w.Show()
 	isCreditsWindowOpening = true
+}
+
+func (v *mainView) about() {
+	if isAboutWindowOpening {
+		return
+	}
+	w := newAboutWindow()
+	w.SetOnClosed(func() { isAboutWindowOpening = false })
+	w.Show()
+	isAboutWindowOpening = true
 }
 
 func (v *mainView) zoomIn() {
