@@ -15,10 +15,9 @@ var (
 	openIcon  fyne.Resource = theme.NewThemedResource(resourceOpenSvg, nil)
 	closeIcon fyne.Resource = theme.NewThemedResource(resourceCloseSvg, nil)
 
-	infoIcon    fyne.Resource = theme.NewThemedResource(resourceInfoSvg, nil)
+	infoIcon    fyne.Resource = theme.NewThemedResource(theme.InfoIcon(), nil)
 	creditsIcon fyne.Resource = theme.NewThemedResource(resourceCreditsSvg, nil) // TODO: better icon...
-
-	aboutIcon fyne.Resource = theme.NewThemedResource(theme.QuestionIcon(), nil)
+	aboutIcon   fyne.Resource = theme.NewThemedResource(theme.QuestionIcon(), nil)
 
 	zoomInIcon  fyne.Resource = theme.NewThemedResource(theme.ZoomInIcon(), nil)
 	zoomOutIcon fyne.Resource = theme.NewThemedResource(theme.ZoomOutIcon(), nil)
