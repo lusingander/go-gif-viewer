@@ -31,6 +31,10 @@ type mainView struct {
 	*navigateBar
 
 	*player
+
+	isInfoWindowOpening    bool
+	isCreditsWindowOpening bool
+	isAboutWindowOpening   bool
 }
 
 func newMainView(w fyne.Window) *mainView {
@@ -105,43 +109,31 @@ func (v *mainView) openFileDialog() {
 	}
 }
 
-var (
-	isInfoWindowOpening    bool
-	isCreditsWindowOpening bool
-	isAboutWindowOpening   bool
-)
-
 func (v *mainView) info() {
 	if v.imageView.GIFImage == nil {
 		return
 	}
-	if isInfoWindowOpening {
-		return
-	}
-	w := newInfoWindow(v.imageView.GIFImage)
-	w.SetOnClosed(func() { isInfoWindowOpening = false })
-	w.Show()
-	isInfoWindowOpening = true
+	wf := func() fyne.Window { return newInfoWindow(v.imageView.GIFImage) }
+	v.openWindow(wf, &v.isInfoWindowOpening)
 }
 
 func (v *mainView) credits() {
-	if isCreditsWindowOpening {
-		return
-	}
-	w := CreditsWindow(fyne.CurrentApp())
-	w.SetOnClosed(func() { isCreditsWindowOpening = false })
-	w.Show()
-	isCreditsWindowOpening = true
+	wf := func() fyne.Window { return CreditsWindow(fyne.CurrentApp()) }
+	v.openWindow(wf, &v.isCreditsWindowOpening)
 }
 
 func (v *mainView) about() {
-	if isAboutWindowOpening {
+	v.openWindow(newAboutWindow, &v.isAboutWindowOpening)
+}
+
+func (v *mainView) openWindow(windowOpen func() fyne.Window, isOpening *bool) {
+	if *isOpening {
 		return
 	}
-	w := newAboutWindow()
-	w.SetOnClosed(func() { isAboutWindowOpening = false })
+	w := windowOpen()
+	w.SetOnClosed(func() { *isOpening = false })
 	w.Show()
-	isAboutWindowOpening = true
+	*isOpening = true
 }
 
 func (v *mainView) zoomIn() {
