@@ -60,7 +60,6 @@ func createSpeedSelect() *widget.Select {
 		Options:     speeds,
 		PlaceHolder: ".", // this value determines the width!
 	}
-	widget.Renderer(sel).Layout(sel.MinSize())
 	return sel
 }
 
