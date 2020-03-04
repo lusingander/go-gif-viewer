@@ -3,7 +3,7 @@ module github.com/lusingander/go-gif-viewer
 go 1.13
 
 require (
-	fyne.io/fyne v1.2.2
+	fyne.io/fyne v1.2.3
 	github.com/TheTitanrain/w32 v0.0.0-20200114052255-2654d97dbd3d // indirect
 	github.com/go-gl/glfw v0.0.0-20191125211704-12ad95a8df72 // indirect
 	github.com/gotk3/gotk3 v0.0.0-20200122052051-1b4add5ab128 // indirect
