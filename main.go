@@ -102,11 +102,21 @@ func (v *mainView) openFileDialog() {
 		}
 		return
 	}
+	// TODO: add loading dialog (hangs when selecting Open from menu item...)
 	err = v.loadImageFromPath(f)
 	if err != nil {
 		dialog.ShowError(err, v.Window)
 		return
 	}
+}
+
+func (v *mainView) withLoadingDialog(f func()) {
+	d := dialog.NewProgressInfinite("Loading", "Now loading...", v.Window)
+	go func() {
+		f()
+		d.Hide()
+	}()
+	d.Show()
 }
 
 func (v *mainView) info() {
@@ -208,10 +218,12 @@ func run(args []string) error {
 	w.Canvas().SetOnTypedRune(v.handleRune)
 	v.addShortcuts()
 	if len(args) > 1 {
-		err := v.loadImageFromPath(args[1])
-		if err != nil {
-			dialog.ShowError(err, w)
-		}
+		v.withLoadingDialog(func() {
+			err := v.loadImageFromPath(args[1])
+			if err != nil {
+				dialog.ShowError(err, w)
+			}
+		})
 	}
 	w.ShowAndRun()
 	return nil
