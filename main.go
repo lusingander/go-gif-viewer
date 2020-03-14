@@ -102,12 +102,13 @@ func (v *mainView) openFileDialog() {
 		}
 		return
 	}
-	// TODO: add loading dialog (hangs when selecting Open from menu item...)
-	err = v.loadImageFromPath(f)
-	if err != nil {
-		dialog.ShowError(err, v.Window)
-		return
-	}
+	v.withLoadingDialog(func() {
+		err = v.loadImageFromPath(f)
+		if err != nil {
+			dialog.ShowError(err, v.Window)
+			return
+		}
+	})
 }
 
 func (v *mainView) withLoadingDialog(f func()) {
