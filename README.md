@@ -15,7 +15,7 @@ Simple animated GIF viewer with Go and [Fyne](https://fyne.io/)
 
 or
 
-`$ go-gif-viewer` and select `Open` (<img src="./resource/icons/svg/open.svg" width=16>) from `File` menu.
+`$ go-gif-viewer` and select open file icon (<img src="./resource/icons/svg/open.svg" width=16>).
 
 ### Keybindings
 
