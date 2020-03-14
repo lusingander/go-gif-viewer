@@ -204,16 +204,6 @@ func run(args []string) error {
 	w.Resize(defaultWindowSize)
 	v := newMainView(w)
 	w.SetContent(v.Container)
-	w.SetMainMenu(fyne.NewMainMenu(
-		fyne.NewMenu("File",
-			fyne.NewMenuItem("Open", v.openFileDialog),
-			fyne.NewMenuItem("Close", v.clearImage),
-		),
-		fyne.NewMenu("View",
-			fyne.NewMenuItem("Zoom In", v.zoomIn),
-			fyne.NewMenuItem("Zoom Out", v.zoomOut),
-		),
-	))
 	w.Canvas().SetOnTypedKey(v.handleKeys)
 	w.Canvas().SetOnTypedRune(v.handleRune)
 	v.addShortcuts()
