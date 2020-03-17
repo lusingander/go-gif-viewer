@@ -22,13 +22,13 @@ var (
 	zoomInIcon  fyne.Resource = theme.NewThemedResource(theme.ZoomInIcon(), nil)
 	zoomOutIcon fyne.Resource = theme.NewThemedResource(theme.ZoomOutIcon(), nil)
 
-	playIcon  fyne.Resource = theme.NewThemedResource(resourcePlaySvg, nil)
-	pauseIcon fyne.Resource = theme.NewThemedResource(resourcePauseSvg, nil)
+	playIcon  fyne.Resource = theme.NewThemedResource(theme.MediaPlayIcon(), nil)
+	pauseIcon fyne.Resource = theme.NewThemedResource(theme.MediaPauseIcon(), nil)
 
-	prevIcon  fyne.Resource = theme.NewThemedResource(resourcePrevSvg, nil)
-	nextIcon  fyne.Resource = theme.NewThemedResource(resourceNextSvg, nil)
-	firstIcon fyne.Resource = theme.NewThemedResource(resourceFirstSvg, nil)
-	lastIcon  fyne.Resource = theme.NewThemedResource(resourceLastSvg, nil)
+	prevIcon  fyne.Resource = theme.NewThemedResource(theme.MediaFastRewindIcon(), nil)
+	nextIcon  fyne.Resource = theme.NewThemedResource(theme.MediaFastForwardIcon(), nil)
+	firstIcon fyne.Resource = theme.NewThemedResource(theme.MediaSkipPreviousIcon(), nil)
+	lastIcon  fyne.Resource = theme.NewThemedResource(theme.MediaSkipNextIcon(), nil)
 )
 
 var speeds = []string{
