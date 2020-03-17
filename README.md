@@ -21,11 +21,11 @@ or
 
 |Key|Description|Icon|
 |-|-|-|
-|←|Go to previous frame|<img src="./resource/icons/svg/prev.svg" width=16>|
-|→|Go to next frame|<img src="./resource/icons/svg/next.svg" width=16>|
-|↑|Go to first frame|<img src="./resource/icons/svg/first.svg" width=16>|
-|↓|Go to last frame|<img src="./resource/icons/svg/last.svg" width=16>|
-|Space|Play / Pause|<img src="./resource/icons/svg/play.svg" width=16> / <img src="./resource/icons/svg/pause.svg" width=16>|
+|←|Go to previous frame|<img src="./resource/document/media-fast-rewind.svg" width=16>|
+|→|Go to next frame|<img src="./resource/document/media-fast-forward.svg" width=16>|
+|↑|Go to first frame|<img src="./resource/document/media-skip-previous.svg" width=16>|
+|↓|Go to last frame|<img src="./resource/document/media-skip-next.svg" width=16>|
+|Space|Play / Pause|<img src="./resource/document/media-play.svg" width=16> / <img src="./resource/document/media-pause.svg" width=16>|
 ||||
 |+|Zoom in|<img src="./resource/document/zoom-in.svg" width=16>|
 |-|Zoom out|<img src="./resource/document/zoom-out.svg" width=16>|
