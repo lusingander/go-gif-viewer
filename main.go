@@ -129,7 +129,7 @@ func (v *mainView) info() {
 }
 
 func (v *mainView) credits() {
-	wf := func() fyne.Window { return CreditsWindow(fyne.CurrentApp()) }
+	wf := func() fyne.Window { return CreditsWindow(fyne.CurrentApp(), fyne.NewSize(800, 400)) }
 	v.openWindow(wf, &v.isCreditsWindowOpening)
 }
 
