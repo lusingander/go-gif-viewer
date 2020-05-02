@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"fyne.io/fyne"
+	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 	"github.com/lusingander/go-gif-viewer/image"
 )
@@ -15,11 +16,22 @@ const (
 func newInfoWindow(gif *image.GIFImage) fyne.Window {
 	w := fyne.CurrentApp().NewWindow(infoWindowName)
 	w.SetContent(
-		widget.NewVBox(
-			label("File name", gif.FileName()),
-			label("File size", formatFileSize(gif)),
-			label("Image size", formatImageSize(gif)),
-			label("Frame count", gif.Length()),
+		fyne.NewContainerWithLayout(
+			layout.NewHBoxLayout(),
+			fyne.NewContainerWithLayout(
+				layout.NewVBoxLayout(),
+				keyLabel("File name"),
+				keyLabel("File size"),
+				keyLabel("Image size"),
+				keyLabel("Frame count"),
+			),
+			fyne.NewContainerWithLayout(
+				layout.NewVBoxLayout(),
+				valueLabel(gif.FileName()),
+				valueLabel(formatFileSize(gif)),
+				valueLabel(formatImageSize(gif)),
+				valueLabel(gif.Length()),
+			),
 		),
 	)
 	return w
@@ -34,6 +46,10 @@ func formatImageSize(gif *image.GIFImage) string {
 	return fmt.Sprintf("%d x %d", w, h)
 }
 
-func label(k string, v interface{}) *widget.Label {
-	return widget.NewLabel(fmt.Sprintf("%s: %v", k, v))
+func keyLabel(l string) *widget.Label {
+	return widget.NewLabelWithStyle(l+":", fyne.TextAlignTrailing, fyne.TextStyle{})
+}
+
+func valueLabel(v interface{}) *widget.Label {
+	return widget.NewLabelWithStyle(fmt.Sprintf("%v", v), fyne.TextAlignLeading, fyne.TextStyle{})
 }
