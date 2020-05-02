@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
+	"github.com/dustin/go-humanize"
 	"github.com/lusingander/go-gif-viewer/image"
 )
 
@@ -38,7 +39,8 @@ func newInfoWindow(gif *image.GIFImage) fyne.Window {
 }
 
 func formatFileSize(gif *image.GIFImage) string {
-	return fmt.Sprintf("%d bytes", gif.FileSizeByte())
+	sizeByte := gif.FileSizeByte()
+	return fmt.Sprintf("%s (%d bytes)", humanize.Bytes(uint64(sizeByte)), sizeByte)
 }
 
 func formatImageSize(gif *image.GIFImage) string {

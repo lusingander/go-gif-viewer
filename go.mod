@@ -5,6 +5,7 @@ go 1.13
 require (
 	fyne.io/fyne v1.2.4
 	github.com/TheTitanrain/w32 v0.0.0-20200114052255-2654d97dbd3d // indirect
+	github.com/dustin/go-humanize v1.0.0
 	github.com/go-gl/glfw v0.0.0-20191125211704-12ad95a8df72 // indirect
 	github.com/gotk3/gotk3 v0.0.0-20200122052051-1b4add5ab128 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
