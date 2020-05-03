@@ -15,7 +15,7 @@ var (
 	openIcon  fyne.Resource = theme.NewThemedResource(resourceOpenSvg, nil)
 	closeIcon fyne.Resource = theme.NewThemedResource(resourceCloseSvg, nil)
 
-	thumbnailIcon fyne.Resource = theme.NewThemedResource(theme.InfoIcon(), nil) // TODO FIX
+	thumbnailIcon fyne.Resource = theme.NewThemedResource(resourceImageSvg, nil)
 	infoIcon      fyne.Resource = theme.NewThemedResource(theme.InfoIcon(), nil)
 	creditsIcon   fyne.Resource = theme.NewThemedResource(resourceCreditsSvg, nil) // TODO: better icon...
 	aboutIcon     fyne.Resource = theme.NewThemedResource(theme.QuestionIcon(), nil)
