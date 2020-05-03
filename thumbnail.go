@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"fyne.io/fyne"
 	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/layout"
@@ -19,6 +21,11 @@ var (
 	thumbnailListDefaultSize   = fyne.NewSize(thumbnailListDefaultWidth, thumbnailListDefaultHeight)
 )
 
+func thumbnailContainer(img *canvas.Image, i int) fyne.CanvasObject {
+	label := fmt.Sprintf("%d", i+1)
+	return widget.NewGroup(label, img)
+}
+
 func thumbnails(gif *image.GIFImage) []fyne.CanvasObject {
 	ts := make([]fyne.CanvasObject, 0)
 	size := uint(thumbnailListDefaultWidth)
@@ -28,7 +35,7 @@ func thumbnails(gif *image.GIFImage) []fyne.CanvasObject {
 			Image:    resized,
 			FillMode: canvas.ImageFillOriginal,
 		}
-		ts = append(ts, img)
+		ts = append(ts, thumbnailContainer(img, i))
 	}
 	return ts
 }
