@@ -32,9 +32,10 @@ type mainView struct {
 
 	*player
 
-	isInfoWindowOpening    bool
-	isCreditsWindowOpening bool
-	isAboutWindowOpening   bool
+	isThumbnailListWindowOpening bool
+	isInfoWindowOpening          bool
+	isCreditsWindowOpening       bool
+	isAboutWindowOpening         bool
 }
 
 func newMainView(w fyne.Window) *mainView {
@@ -44,6 +45,7 @@ func newMainView(w fyne.Window) *mainView {
 	menuBar := newMenuBar(
 		mainView.openFileDialog,
 		mainView.clearImage,
+		mainView.thumbnailList,
 		mainView.info,
 		mainView.credits,
 		mainView.about,
@@ -118,6 +120,14 @@ func (v *mainView) withLoadingDialog(f func()) {
 		d.Hide()
 	}()
 	d.Show()
+}
+
+func (v *mainView) thumbnailList() {
+	if v.imageView.GIFImage == nil {
+		return
+	}
+	wf := func() fyne.Window { return newThumbnailListWindow(v.imageView.GIFImage) }
+	v.openWindow(wf, &v.isThumbnailListWindowOpening)
 }
 
 func (v *mainView) info() {
