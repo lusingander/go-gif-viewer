@@ -1,4 +1,4 @@
-.PHONY: all run build bundle clean
+.PHONY: all run build bundle clean credits
 
 BINARY_NAME=go-gif-viewer
 
@@ -15,3 +15,6 @@ bundle:
 
 clean:
 	rm $(BINARY_NAME)
+
+credits:
+	fyne-credits-generator > ./credits.go
