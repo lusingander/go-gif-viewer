@@ -9,9 +9,9 @@ import (
 	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/driver/desktop"
 	"fyne.io/fyne/layout"
+	"fyne.io/fyne/storage"
 	"fyne.io/fyne/theme"
 	"github.com/lusingander/go-gif-viewer/image"
-	fd "github.com/sqweek/dialog"
 )
 
 const (
@@ -95,22 +95,24 @@ func (v *mainView) clearImage() {
 }
 
 func (v *mainView) openFileDialog() {
-	// TODO: https://github.com/sqweek/dialog/issues/24
-	f, err := fd.File().Filter("GIF", "gif").Load()
-	defer v.Window.RequestFocus() // dialog does not return focus...
-	if err != nil {
-		if err != fd.ErrCancelled {
-			dialog.ShowError(err, v.Window)
+	fd := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+		if err == nil && reader == nil {
+			return
 		}
-		return
-	}
-	v.withLoadingDialog(func() {
-		err = v.loadImageFromPath(f)
 		if err != nil {
 			dialog.ShowError(err, v.Window)
 			return
 		}
-	})
+		v.withLoadingDialog(func() {
+			err = v.loadImageFromPath(reader.URI().String()[7:]) // `file://`
+			if err != nil {
+				dialog.ShowError(err, v.Window)
+				return
+			}
+		})
+	}, v.Window)
+	fd.SetFilter(storage.NewExtensionFileFilter([]string{".gif"}))
+	fd.Show()
 }
 
 func (v *mainView) withLoadingDialog(f func()) {
