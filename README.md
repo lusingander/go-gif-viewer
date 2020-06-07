@@ -1,5 +1,8 @@
-go-gif-viewer
-====
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/lusingander/go-gif-viewer)
+[![Go Report Card](https://goreportcard.com/badge/github.com/lusingander/go-gif-viewer)](https://goreportcard.com/report/github.com/lusingander/go-gif-viewer)
+![GitHub](https://img.shields.io/github/license/lusingander/go-gif-viewer)
+
+# go-gif-viewer
 
 Simple animated GIF viewer with Go and [Fyne](https://fyne.io/)
 
