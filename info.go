@@ -23,6 +23,7 @@ func newInfoWindow(gif *image.GIFImage) fyne.Window {
 				layout.NewVBoxLayout(),
 				keyLabel("File name"),
 				keyLabel("File path"),
+				keyLabel("Last updated"),
 				keyLabel("File size"),
 				keyLabel("Image size"),
 				keyLabel("Frame count"),
@@ -31,6 +32,7 @@ func newInfoWindow(gif *image.GIFImage) fyne.Window {
 				layout.NewVBoxLayout(),
 				valueLabel(gif.FileName()),
 				valueLabel(gif.FilePath()),
+				valueLabel(formatLastUpdated(gif)),
 				valueLabel(formatFileSize(gif)),
 				valueLabel(formatImageSize(gif)),
 				valueLabel(gif.Length()),
@@ -48,6 +50,11 @@ func formatFileSize(gif *image.GIFImage) string {
 func formatImageSize(gif *image.GIFImage) string {
 	w, h := gif.Size()
 	return fmt.Sprintf("%d x %d", w, h)
+}
+
+func formatLastUpdated(gif *image.GIFImage) string {
+	t := gif.FileLastUpdated()
+	return t.Format("2006-01-02 03:04:56")
 }
 
 func keyLabel(l string) *widget.Label {

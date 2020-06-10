@@ -6,12 +6,14 @@ import (
 	"image/gif"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type fileInfo struct {
-	name     string
-	path     string
-	sizeByte int64
+	name        string
+	path        string
+	sizeByte    int64
+	lastUpdated time.Time
 }
 
 // GIFImage represents GIF iamge file that can be displayed in frame units.
@@ -34,6 +36,11 @@ func (g *GIFImage) FilePath() string {
 // FileSizeByte returns the original file size in bytes.
 func (g *GIFImage) FileSizeByte() int64 {
 	return g.fileInfo.sizeByte
+}
+
+// FileLastUpdated returns the original file last updated datetime.
+func (g *GIFImage) FileLastUpdated() time.Time {
+	return g.fileInfo.lastUpdated
 }
 
 // Size returns width and height of the image.
@@ -125,9 +132,10 @@ func getFileInfo(f *os.File, p string) (*fileInfo, error) {
 		return nil, err
 	}
 	return &fileInfo{
-		name:     i.Name(),
-		path:     path,
-		sizeByte: i.Size(),
+		name:        i.Name(),
+		path:        path,
+		sizeByte:    i.Size(),
+		lastUpdated: i.ModTime(),
 	}, nil
 }
 
