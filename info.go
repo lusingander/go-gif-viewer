@@ -22,6 +22,7 @@ func newInfoWindow(gif *image.GIFImage) fyne.Window {
 			fyne.NewContainerWithLayout(
 				layout.NewVBoxLayout(),
 				keyLabel("File name"),
+				keyLabel("File path"),
 				keyLabel("File size"),
 				keyLabel("Image size"),
 				keyLabel("Frame count"),
@@ -29,6 +30,7 @@ func newInfoWindow(gif *image.GIFImage) fyne.Window {
 			fyne.NewContainerWithLayout(
 				layout.NewVBoxLayout(),
 				valueLabel(gif.FileName()),
+				valueLabel(gif.FilePath()),
 				valueLabel(formatFileSize(gif)),
 				valueLabel(formatImageSize(gif)),
 				valueLabel(gif.Length()),

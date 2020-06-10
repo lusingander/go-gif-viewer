@@ -5,10 +5,12 @@ import (
 	"image/color"
 	"image/gif"
 	"os"
+	"path/filepath"
 )
 
 type fileInfo struct {
 	name     string
+	path     string
 	sizeByte int64
 }
 
@@ -22,6 +24,11 @@ type GIFImage struct {
 // FileName returns the original file name.
 func (g *GIFImage) FileName() string {
 	return g.fileInfo.name
+}
+
+// FilePath returns the original file path.
+func (g *GIFImage) FilePath() string {
+	return g.fileInfo.path
 }
 
 // FileSizeByte returns the original file size in bytes.
@@ -97,7 +104,7 @@ func loadGIF(path string) (*gif.GIF, *fileInfo, error) {
 		return nil, nil, err
 	}
 	defer f.Close()
-	i, err := getFileInfo(f)
+	i, err := getFileInfo(f, path)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -108,13 +115,18 @@ func loadGIF(path string) (*gif.GIF, *fileInfo, error) {
 	return g, i, nil
 }
 
-func getFileInfo(f *os.File) (*fileInfo, error) {
+func getFileInfo(f *os.File, p string) (*fileInfo, error) {
 	i, err := f.Stat()
+	if err != nil {
+		return nil, err
+	}
+	path, err := filepath.Abs(p)
 	if err != nil {
 		return nil, err
 	}
 	return &fileInfo{
 		name:     i.Name(),
+		path:     path,
 		sizeByte: i.Size(),
 	}, nil
 }
