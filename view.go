@@ -77,7 +77,7 @@ func (v *imageView) loadImageCaches() {
 	for i := 0; i < l; i++ {
 		img := v.GIFImage.Get(i)
 		w, h := v.scaledImageSize()
-		caches[i] = resize.Resize(w, h, img, resize.Bilinear)
+		caches[i] = resize.Resize(w, h, img, resize.NearestNeighbor)
 	}
 	v.caches = caches
 }

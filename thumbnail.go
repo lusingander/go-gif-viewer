@@ -29,7 +29,7 @@ func thumbnailContainer(img *canvas.Image, i int) fyne.CanvasObject {
 func addThumbnails(container *fyne.Container, gif *image.GIFImage) {
 	size := uint(thumbnailListDefaultWidth)
 	for i := 0; i < gif.Length(); i++ {
-		resized := resize.Resize(size, size, gif.Get(i), resize.Bilinear)
+		resized := resize.Resize(size, size, gif.Get(i), resize.NearestNeighbor)
 		img := &canvas.Image{
 			Image:    resized,
 			FillMode: canvas.ImageFillOriginal,
