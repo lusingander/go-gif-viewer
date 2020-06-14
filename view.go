@@ -1,6 +1,8 @@
 package main
 
 import (
+	im "image"
+
 	"fyne.io/fyne"
 	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/layout"
@@ -23,6 +25,8 @@ type imageView struct {
 	*image.GIFImage
 
 	scale float64
+
+	caches []im.Image
 }
 
 func newImageView() *imageView {
@@ -49,19 +53,33 @@ func newImageView() *imageView {
 func (v *imageView) zoomIn() {
 	if v.scale < scaleMax {
 		v.scale += scaleStep
+		v.loadImageCaches()
 	}
 }
 
 func (v *imageView) zoomOut() {
 	if v.scale > scaleMin {
 		v.scale -= scaleStep
+		v.loadImageCaches()
 	}
 }
 
 func (v *imageView) setImage(img *image.GIFImage) {
 	v.GIFImage = img
 	v.scale = scaleDefault
+	v.loadImageCaches()
 	v.refleshFrame(0)
+}
+
+func (v *imageView) loadImageCaches() {
+	l := v.GIFImage.Length()
+	caches := make([]im.Image, l)
+	for i := 0; i < l; i++ {
+		img := v.GIFImage.Get(i)
+		w, h := v.scaledImageSize()
+		caches[i] = resize.Resize(w, h, img, resize.Bilinear)
+	}
+	v.caches = caches
 }
 
 func (v *imageView) clearImage() {
@@ -70,9 +88,7 @@ func (v *imageView) clearImage() {
 }
 
 func (v *imageView) refleshFrame(n int) {
-	img := v.GIFImage.Get(n)
-	w, h := v.scaledImageSize()
-	v.Image.Image = resize.Resize(w, h, img, resize.Bilinear)
+	v.Image.Image = v.caches[n]
 	v.reflesh()
 }
 
