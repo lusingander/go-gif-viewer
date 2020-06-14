@@ -26,8 +26,7 @@ func thumbnailContainer(img *canvas.Image, i int) fyne.CanvasObject {
 	return widget.NewGroup(label, img)
 }
 
-func thumbnails(gif *image.GIFImage) []fyne.CanvasObject {
-	ts := make([]fyne.CanvasObject, 0)
+func addThumbnails(container *fyne.Container, gif *image.GIFImage) {
 	size := uint(thumbnailListDefaultWidth)
 	for i := 0; i < gif.Length(); i++ {
 		resized := resize.Resize(size, size, gif.Get(i), resize.Bilinear)
@@ -35,21 +34,15 @@ func thumbnails(gif *image.GIFImage) []fyne.CanvasObject {
 			Image:    resized,
 			FillMode: canvas.ImageFillOriginal,
 		}
-		ts = append(ts, thumbnailContainer(img, i))
+		container.AddObject(thumbnailContainer(img, i))
 	}
-	return ts
 }
 
 func newThumbnailListWindow(gif *image.GIFImage) fyne.Window {
 	w := fyne.CurrentApp().NewWindow(thumbnailListWindowName)
-	w.SetContent(
-		widget.NewVScrollContainer(
-			fyne.NewContainerWithLayout(
-				layout.NewVBoxLayout(),
-				thumbnails(gif)...,
-			),
-		),
-	)
+	l := fyne.NewContainerWithLayout(layout.NewVBoxLayout())
+	w.SetContent(widget.NewVScrollContainer(l))
 	w.Resize(thumbnailListDefaultSize)
+	go addThumbnails(l, gif)
 	return w
 }
