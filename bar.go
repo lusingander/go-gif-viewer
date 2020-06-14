@@ -36,7 +36,10 @@ var speeds = []string{
 	"0.25x",
 	"0.5x",
 	"1.0x",
+	"1.5x",
 	"2.0x",
+	"3.0x",
+	"4.0x",
 }
 
 func defaultSpeed() string {
