@@ -10,7 +10,6 @@ import (
 	"fyne.io/fyne/driver/desktop"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/storage"
-	"fyne.io/fyne/theme"
 	"github.com/lusingander/go-gif-viewer/image"
 )
 
@@ -212,7 +211,6 @@ func (v *mainView) addSuperShotrcuts(key fyne.KeyName, f func()) {
 
 func run(args []string) error {
 	a := app.New()
-	a.Settings().SetTheme(theme.DarkTheme())
 	w := a.NewWindow(appName)
 	w.Resize(defaultWindowSize)
 	v := newMainView(w)
