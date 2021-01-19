@@ -56,14 +56,8 @@ type menuBar struct {
 }
 
 func createSpeedSelect() *widget.Select {
-	// Note: when using NewSelect, defaultPlaceHolder cannot be set, so the width of Select is specified
-	// TODO: do not show shadow / move to toolbar
-	sel := &widget.Select{
-		BaseWidget:  widget.BaseWidget{},
-		Selected:    defaultSpeed(),
-		Options:     speeds,
-		PlaceHolder: ".", // this value determines the width!
-	}
+	sel := widget.NewSelect(speeds, func(string) {})
+	sel.SetSelected(defaultSpeed())
 	return sel
 }
 
