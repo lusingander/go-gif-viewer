@@ -15,7 +15,7 @@ import (
 
 const (
 	appName = "GIF Viewer"
-	version = "0.2.2"
+	version = "0.3.0"
 )
 
 var defaultWindowSize = fyne.NewSize(400, 400)
