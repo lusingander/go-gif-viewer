@@ -159,11 +159,17 @@ func (v *mainView) openWindow(windowOpen func() fyne.Window, isOpening *bool) {
 }
 
 func (v *mainView) zoomIn() {
+	if v.imageView.GIFImage == nil {
+		return
+	}
 	v.imageView.zoomIn()
 	v.navigateBar.update()
 }
 
 func (v *mainView) zoomOut() {
+	if v.imageView.GIFImage == nil {
+		return
+	}
 	v.imageView.zoomOut()
 	v.navigateBar.update()
 }
